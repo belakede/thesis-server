@@ -11,6 +11,7 @@
 
     <modules>
         <module>suspect-game</module>
+        <module>suspect-server</module>
     </modules>
 
     <properties>
