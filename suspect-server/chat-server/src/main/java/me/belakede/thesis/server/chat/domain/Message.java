@@ -17,14 +17,10 @@ public class Message {
 
     private String message;
 
-    @ManyToOne
-    private Room room;
-
     public Message() {
     }
 
-    public Message(Room room, Sender sender, String message) {
-        this.room = room;
+    public Message(Sender sender, String message) {
         this.sender = sender;
         this.message = message;
         this.time = LocalDateTime.now();
@@ -62,14 +58,6 @@ public class Message {
         this.message = message;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -98,7 +86,6 @@ public class Message {
                 ", sender='" + sender + '\'' +
                 ", time=" + time +
                 ", message='" + message + '\'' +
-                ", room=" + room +
                 '}';
     }
 }
