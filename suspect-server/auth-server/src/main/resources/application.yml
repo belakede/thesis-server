@@ -17,4 +17,8 @@ oauth2:
     id: c48dfe30-f50e
     secret: ef26cafe-557d-41d2-aec6-ff4a44c8871e
 
-curl -X POST -d "client_id=c48dfe30-f50e&client_secret=ef26cafe-557d-41d2-aec6-ff4a44c8871e&grant_type=password&username=admin&password=1234" http://localhost:9001/rest/oauth/token
+suspect:
+  server:
+    admin:
+      username: admin
+      password: password
