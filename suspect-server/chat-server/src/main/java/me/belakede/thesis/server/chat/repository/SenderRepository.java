@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SenderRepository extends JpaRepository<Sender, Long> {
+
+    Sender findByName(String name);
+
 }

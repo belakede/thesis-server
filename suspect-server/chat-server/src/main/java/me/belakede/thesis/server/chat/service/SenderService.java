@@ -20,4 +20,8 @@ public class SenderService {
         return repository.save(new Sender(name, room));
     }
 
+    public Sender findByName(String name) {
+        return repository.findByName(name);
+    }
+
 }
