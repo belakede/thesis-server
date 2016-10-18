@@ -10,7 +10,7 @@ spring:
     database-platform: HSQL
     show-sql: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 oauth2:
   client:
