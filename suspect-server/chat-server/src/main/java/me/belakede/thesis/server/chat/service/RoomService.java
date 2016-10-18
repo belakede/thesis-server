@@ -21,5 +21,8 @@ public class RoomService {
         return repository.save(new Room(UUID.randomUUID().toString()));
     }
 
+    public Room findByName(String name) {
+        return repository.findByName(name);
+    }
 
 }
