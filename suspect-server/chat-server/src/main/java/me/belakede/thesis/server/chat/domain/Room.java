@@ -14,7 +14,7 @@ public class Room {
     private String name;
 
     @OneToMany(mappedBy = "room")
-    private Set<Message> messages;
+    private Set<Sender> senders;
 
     public Room() {
     }
@@ -39,12 +39,12 @@ public class Room {
         this.name = name;
     }
 
-    public Set<Message> getMessages() {
-        return messages;
+    public Set<Sender> getSenders() {
+        return senders;
     }
 
-    public void setMessages(Set<Message> messages) {
-        this.messages = messages;
+    public void setSenders(Set<Sender> senders) {
+        this.senders = senders;
     }
 
     @Override
@@ -54,18 +54,13 @@ public class Room {
 
         Room room = (Room) o;
 
-        return id != null ? id.equals(room.id) : room.id == null
-                && (name != null ? name.equals(room.name) : room.name == null
-                && (messages != null ? messages.equals(room.messages) : room.messages == null));
+        return name != null ? name.equals(room.name) : room.name == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (messages != null ? messages.hashCode() : 0);
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 
     @Override
