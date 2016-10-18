@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>auth-server</module>
+        <module>chat-server</module>
     </modules>
 
     <properties>
