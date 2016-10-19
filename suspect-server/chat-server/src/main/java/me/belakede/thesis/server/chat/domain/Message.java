@@ -1,9 +1,6 @@
 package me.belakede.thesis.server.chat.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,6 +10,7 @@ public class Message {
     @GeneratedValue
     private Long id;
 
+    @ManyToOne
     private Sender sender;
 
     @Column(nullable = false)
