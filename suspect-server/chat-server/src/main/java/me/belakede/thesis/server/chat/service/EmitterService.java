@@ -22,7 +22,7 @@ public class EmitterService {
     }
 
     public SseEmitter createEmitter() {
-        SseEmitter emitter = new SseEmitter();
+        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitter.onCompletion(() -> emitters.remove(emitter));
         emitters.add(emitter);
         return emitter;
