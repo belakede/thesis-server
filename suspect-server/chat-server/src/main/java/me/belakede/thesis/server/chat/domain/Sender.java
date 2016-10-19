@@ -3,13 +3,14 @@ package me.belakede.thesis.server.chat.domain;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "SNDR_UN_K", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "room_id"}))
 public class Sender {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne

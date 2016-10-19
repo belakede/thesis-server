@@ -21,8 +21,8 @@ public class SenderService {
         return repository.save(new Sender(name, room));
     }
 
-    public Sender findByName(String name) throws MissingSenderException {
-        Sender sender = repository.findByName(name);
+    public Sender findByNameAndRoom(String name, Room room) throws MissingSenderException {
+        Sender sender = repository.findByNameAndRoom(name, room);
         if (sender == null) {
             throw new MissingSenderException("The following sender is not found: " + name);
         }

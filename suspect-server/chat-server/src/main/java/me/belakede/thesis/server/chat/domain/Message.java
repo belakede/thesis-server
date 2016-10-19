@@ -1,45 +1,27 @@
 package me.belakede.thesis.server.chat.domain;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Entity
 public class Message {
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @ManyToOne
-    private Sender sender;
-
-    @Column(nullable = false)
+    private String sender;
     private LocalDateTime time;
-
     private String message;
 
     public Message() {
     }
 
-    public Message(Sender sender, String message) {
+    public Message(String sender, String message) {
         this.sender = sender;
         this.message = message;
         this.time = LocalDateTime.now();
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Sender getSender() {
+    public String getSender() {
         return sender;
     }
 
-    public void setSender(Sender sender) {
+    public void setSender(String sender) {
         this.sender = sender;
     }
 
@@ -78,15 +60,5 @@ public class Message {
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Message{" +
-                "id=" + id +
-                ", sender='" + sender + '\'' +
-                ", time=" + time +
-                ", message='" + message + '\'' +
-                '}';
     }
 }
