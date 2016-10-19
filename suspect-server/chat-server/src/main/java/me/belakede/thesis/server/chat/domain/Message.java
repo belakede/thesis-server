@@ -12,7 +12,7 @@ public class Message {
 
     private Sender sender;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     private LocalDateTime time;
 
     private String message;
