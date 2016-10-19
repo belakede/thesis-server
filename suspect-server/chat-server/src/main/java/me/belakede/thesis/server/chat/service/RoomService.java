@@ -1,6 +1,7 @@
 package me.belakede.thesis.server.chat.service;
 
 import me.belakede.thesis.server.chat.domain.Room;
+import me.belakede.thesis.server.chat.exception.MissingRoomException;
 import me.belakede.thesis.server.chat.repository.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,12 @@ public class RoomService {
         return repository.findAll();
     }
 
-    public Room findByName(String name) {
-        return repository.findByName(name);
+    public Room findByName(String name) throws MissingRoomException {
+        Room room = repository.findByName(name);
+        if (room == null) {
+            throw new MissingRoomException("The following room is not found: " + name);
+        }
+        return room;
     }
 
 }
