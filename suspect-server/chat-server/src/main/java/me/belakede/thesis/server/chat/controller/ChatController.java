@@ -34,13 +34,13 @@ public class ChatController {
         this.emitterService = emitterService;
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.POST)
     public SseEmitter join(Principal principal, @NotNull String name) throws MissingRoomException {
         senderService.create(principal.getName(), roomService.findByName(name));
         return emitterService.createEmitter();
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.PUT)
     public void send(Principal principal, @NotNull String message) throws MissingSenderException {
         emitterService.broadcast(messageService.create(senderService.findByName(principal.getName()), message));
     }
