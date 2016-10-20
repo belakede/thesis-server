@@ -3,7 +3,7 @@ package me.belakede.thesis.server.chat.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "SNDR_UN_K", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "room"}))
+@Table(uniqueConstraints = @UniqueConstraint(name = "SENDER_UNIQUE_KEY", columnNames = {"name", "room"}))
 public class Sender {
 
     @Id
