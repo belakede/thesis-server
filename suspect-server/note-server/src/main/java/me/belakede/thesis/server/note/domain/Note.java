@@ -5,6 +5,7 @@ import me.belakede.thesis.game.equipment.Marker;
 import javax.persistence.*;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name = "NOTE_UNIQUE_KEY", columnNames = {"author_id", "card", "owner"}))
 public class Note {
 
     @Id

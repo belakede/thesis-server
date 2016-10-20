@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name = "AUTHOR_UNIQUE_KEY", columnNames = {"name", "room"}))
 public class Author {
 
     @Id

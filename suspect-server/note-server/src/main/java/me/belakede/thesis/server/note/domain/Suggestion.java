@@ -13,7 +13,7 @@ public class Suggestion {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     private Author author;
 
     @Column(nullable = false)
