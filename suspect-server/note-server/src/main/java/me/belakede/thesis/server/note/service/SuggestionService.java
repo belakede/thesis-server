@@ -3,6 +3,7 @@ package me.belakede.thesis.server.note.service;
 import me.belakede.thesis.game.equipment.Suspicion;
 import me.belakede.thesis.server.note.domain.Author;
 import me.belakede.thesis.server.note.domain.Suggestion;
+import me.belakede.thesis.server.note.exception.MissingSuggestionException;
 import me.belakede.thesis.server.note.repository.SuggestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,14 @@ public class SuggestionService {
     @Autowired
     public SuggestionService(SuggestionRepository suggestionRepository) {
         this.suggestionRepository = suggestionRepository;
+    }
+
+    public Suggestion read(Author author) throws MissingSuggestionException {
+        Suggestion suggestion = suggestionRepository.findByAuthor(author);
+        if (suggestion == null) {
+            throw new MissingSuggestionException("Suggestion not found for user " + author.getName());
+        }
+        return suggestion;
     }
 
     public Suggestion store(Author author, Suspicion suspicion) {
