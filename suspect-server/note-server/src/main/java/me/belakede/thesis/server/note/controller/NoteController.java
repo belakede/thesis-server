@@ -32,6 +32,11 @@ public class NoteController {
         this.authorService = authorService;
     }
 
+    @RequestMapping(value = "/join", method = RequestMethod.POST)
+    public Author join(Principal principal, @NotNull String room) {
+        return authorService.create(principal.getName(), room);
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     public List<Note> findAll(Principal principal, @RequestParam @NotNull String room) throws MissingAuthorException {
         Author author = authorService.findByNameAndRoom(principal.getName(), room);
