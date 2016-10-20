@@ -1,6 +1,5 @@
 package me.belakede.thesis.server.chat.service;
 
-import me.belakede.thesis.server.chat.domain.Room;
 import me.belakede.thesis.server.chat.domain.Sender;
 import me.belakede.thesis.server.chat.exception.MissingSenderException;
 import me.belakede.thesis.server.chat.repository.SenderRepository;
@@ -17,11 +16,11 @@ public class SenderService {
         this.repository = repository;
     }
 
-    public Sender create(String name, Room room) {
+    public Sender create(String name, String room) {
         return repository.save(new Sender(name, room));
     }
 
-    public Sender findByNameAndRoom(String name, Room room) throws MissingSenderException {
+    public Sender findByNameAndRoom(String name, String room) throws MissingSenderException {
         Sender sender = repository.findByNameAndRoom(name, room);
         if (sender == null) {
             throw new MissingSenderException("The following sender is not found: " + name);

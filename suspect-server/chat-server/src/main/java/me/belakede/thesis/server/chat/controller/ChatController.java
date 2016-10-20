@@ -1,11 +1,9 @@
 package me.belakede.thesis.server.chat.controller;
 
 import me.belakede.thesis.server.chat.domain.Sender;
-import me.belakede.thesis.server.chat.exception.MissingRoomException;
 import me.belakede.thesis.server.chat.exception.MissingSenderException;
 import me.belakede.thesis.server.chat.service.EmitterService;
 import me.belakede.thesis.server.chat.service.MessageService;
-import me.belakede.thesis.server.chat.service.RoomService;
 import me.belakede.thesis.server.chat.service.SenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,27 +26,25 @@ public class ChatController {
 
     private final MessageService messageService;
     private final SenderService senderService;
-    private final RoomService roomService;
     private final EmitterService emitterService;
 
     @Autowired
-    public ChatController(MessageService messageService, SenderService senderService, RoomService roomService, EmitterService emitterService) {
+    public ChatController(MessageService messageService, SenderService senderService, EmitterService emitterService) {
         this.messageService = messageService;
         this.senderService = senderService;
-        this.roomService = roomService;
         this.emitterService = emitterService;
     }
 
     @RequestMapping(value = "/join", method = RequestMethod.POST)
-    public SseEmitter join(Principal principal, @NotNull String name) throws MissingRoomException {
-        senderService.create(principal.getName(), roomService.findByName(name));
+    public SseEmitter join(Principal principal, @NotNull String room) {
+        senderService.create(principal.getName(), room);
         return emitterService.createEmitter();
     }
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public void send(Principal principal, @NotNull String message, @NotNull String room) throws MissingSenderException, MissingRoomException {
+    public void send(Principal principal, @NotNull String message, @NotNull String room) throws MissingSenderException {
         LOGGER.info("{} would like to send the following message: {}", principal.getName(), message);
-        Sender sender = senderService.findByNameAndRoom(principal.getName(), roomService.findByName(room));
+        Sender sender = senderService.findByNameAndRoom(principal.getName(), room);
         emitterService.broadcast(messageService.create(sender, message));
     }
 

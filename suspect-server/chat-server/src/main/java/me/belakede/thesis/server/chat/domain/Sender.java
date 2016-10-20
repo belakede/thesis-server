@@ -3,18 +3,18 @@ package me.belakede.thesis.server.chat.domain;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "SNDR_UN_K", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "room_id"}))
+@Table(name = "SNDR_UN_K", uniqueConstraints = @UniqueConstraint(columnNames = {"name", "room"}))
 public class Sender {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private String name;
 
-    @ManyToOne
-    private Room room;
+    @Column(nullable = false, updatable = false)
+    private String room;
 
     public Sender() {
     }
@@ -23,7 +23,7 @@ public class Sender {
         this.name = name;
     }
 
-    public Sender(String name, Room room) {
+    public Sender(String name, String room) {
         this.name = name;
         this.room = room;
     }
@@ -44,11 +44,11 @@ public class Sender {
         this.name = name;
     }
 
-    public Room getRoom() {
+    public String getRoom() {
         return room;
     }
 
-    public void setRoom(Room room) {
+    public void setRoom(String room) {
         this.room = room;
     }
 
