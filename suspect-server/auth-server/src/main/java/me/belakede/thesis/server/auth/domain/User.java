@@ -74,4 +74,34 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return enabled == user.enabled && (username != null ? username.equals(user.username) : user.username == null
+                && (roles != null ? roles.equals(user.roles) : user.roles == null));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = username != null ? username.hashCode() : 0;
+        result = 31 * result + (enabled ? 1 : 0);
+        result = 31 * result + (roles != null ? roles.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='********'" +
+                ", enabled=" + enabled +
+                ", roles=" + roles +
+                '}';
+    }
 }
