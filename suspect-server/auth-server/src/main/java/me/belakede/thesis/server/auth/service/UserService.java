@@ -20,8 +20,8 @@ public class UserService {
     @Autowired
     private PasswordEncoder encoder;
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<User> findByRole(Role role) {
+        return userRepository.findByRolesContains(role);
     }
 
     public User create(String username, String password) {
