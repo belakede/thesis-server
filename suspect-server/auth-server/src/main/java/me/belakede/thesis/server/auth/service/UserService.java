@@ -14,11 +14,14 @@ import java.util.stream.Stream;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    private PasswordEncoder encoder;
+    public UserService(UserRepository userRepository, PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.encoder = encoder;
+    }
 
     public List<User> findByRole(Role role) {
         return userRepository.findByRolesContains(role);
