@@ -1,4 +1,4 @@
-package me.belakede.thesis.server.auth.test.configuration;
+package me.belakede.thesis.server.test.auth.configuration;
 
 import me.belakede.thesis.server.auth.repository.UserRepository;
 import me.belakede.thesis.server.auth.service.UserService;

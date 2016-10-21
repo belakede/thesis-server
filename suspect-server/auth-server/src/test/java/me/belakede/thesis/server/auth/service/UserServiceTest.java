@@ -4,7 +4,7 @@ import me.belakede.thesis.server.auth.domain.Role;
 import me.belakede.thesis.server.auth.domain.User;
 import me.belakede.thesis.server.auth.exception.MissingUserException;
 import me.belakede.thesis.server.auth.repository.UserRepository;
-import me.belakede.thesis.server.auth.test.configuration.UserServiceTestConfiguration;
+import me.belakede.thesis.server.test.auth.configuration.UserServiceTestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
