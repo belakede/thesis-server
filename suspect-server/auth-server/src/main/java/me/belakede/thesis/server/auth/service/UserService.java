@@ -2,6 +2,7 @@ package me.belakede.thesis.server.auth.service;
 
 import me.belakede.thesis.server.auth.domain.Role;
 import me.belakede.thesis.server.auth.domain.User;
+import me.belakede.thesis.server.auth.exception.MissingUserException;
 import me.belakede.thesis.server.auth.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,8 +37,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User remove(String username) {
+    public User remove(String username) throws MissingUserException {
         User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new MissingUserException("User not found: " + username);
+        }
         userRepository.delete(user);
         return user;
     }
