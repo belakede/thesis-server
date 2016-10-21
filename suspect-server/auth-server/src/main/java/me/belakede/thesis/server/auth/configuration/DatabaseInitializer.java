@@ -18,15 +18,12 @@ import java.util.stream.Stream;
 public class DatabaseInitializer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseInitializer.class);
-
-    @Value("${suspect.server.admin.username}")
-    private String username;
-
-    @Value("${suspect.server.admin.password}")
-    private String password;
-
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    @Value("${suspect.server.admin.username}")
+    private String username;
+    @Value("${suspect.server.admin.password}")
+    private String password;
 
     @Autowired
     public DatabaseInitializer(UserRepository userRepository, PasswordEncoder encoder) {
@@ -48,7 +45,7 @@ public class DatabaseInitializer {
         User user = new User();
         user.setUsername(username);
         user.setPassword(encoder.encode(password));
-        user.setRoles(Stream.of(Role.values()).collect(Collectors.toSet()));
+        user.setRoles(Stream.of(Role.ADMIN).collect(Collectors.toSet()));
         user.setEnabled(true);
         return user;
     }
