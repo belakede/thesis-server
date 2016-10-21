@@ -32,4 +32,10 @@ public class UserService {
         user.setRoles(Stream.of(Role.USER).collect(Collectors.toSet()));
         return userRepository.save(user);
     }
+
+    public User remove(String username) {
+        User user = userRepository.findByUsername(username);
+        userRepository.delete(user);
+        return user;
+    }
 }
