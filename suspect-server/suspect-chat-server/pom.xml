@@ -9,12 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>chat-server</artifactId>
+    <artifactId>suspect-chat-server</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>me.belakede.thesis</groupId>
-            <artifactId>auth-server</artifactId>
+            <artifactId>suspect-auth-server</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>

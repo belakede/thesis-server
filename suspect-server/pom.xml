@@ -12,9 +12,9 @@
     <artifactId>suspect-server</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>auth-server</module>
-        <module>chat-server</module>
-        <module>note-server</module>
+        <module>suspect-auth-server</module>
+        <module>suspect-chat-server</module>
+        <module>suspect-note-server</module>
     </modules>
 
     <properties>
