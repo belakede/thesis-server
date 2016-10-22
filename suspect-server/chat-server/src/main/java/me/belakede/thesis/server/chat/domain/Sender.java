@@ -59,16 +59,14 @@ public class Sender {
 
         Sender sender = (Sender) o;
 
-        return id != null ? id.equals(sender.id) : sender.id == null
-                && (name != null ? name.equals(sender.name) : sender.name == null
-                && (room != null ? room.equals(sender.room) : sender.room == null));
+        if (name != null ? !name.equals(sender.name) : sender.name != null) return false;
+        return room != null ? room.equals(sender.room) : sender.room == null;
 
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
+        int result = name != null ? name.hashCode() : 0;
         result = 31 * result + (room != null ? room.hashCode() : 0);
         return result;
     }
