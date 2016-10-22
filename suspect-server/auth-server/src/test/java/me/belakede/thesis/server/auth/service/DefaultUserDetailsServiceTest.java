@@ -52,6 +52,9 @@ public class DefaultUserDetailsServiceTest {
         assertThat(user.getAuthorities().size(), is(1));
         assertThat(user.getAuthorities(), contains(Role.USER));
         assertThat(user.isEnabled(), is(true));
+        assertThat(user.isAccountNonExpired(), is(true));
+        assertThat(user.isAccountNonLocked(), is(true));
+        assertThat(user.isCredentialsNonExpired(), is(true));
     }
 
 }
