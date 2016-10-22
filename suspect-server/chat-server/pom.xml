@@ -11,5 +11,13 @@
 
     <artifactId>chat-server</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>me.belakede.thesis</groupId>
+            <artifactId>auth-server</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 </project>
