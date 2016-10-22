@@ -1,8 +1,9 @@
 package me.belakede.thesis.server.auth.controller;
 
 import me.belakede.junit.OrderedSpringRunner;
+import me.belakede.test.security.oauth2.OAuth2Helper;
+import me.belakede.thesis.server.auth.domain.User;
 import me.belakede.thesis.server.auth.repository.UserRepository;
-import me.belakede.thesis.server.test.OAuthHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Import(OAuthHelper.class)
+@Import(OAuth2Helper.class)
 @RunWith(OrderedSpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class UserControllerIntegrationTest {
@@ -40,7 +41,7 @@ public class UserControllerIntegrationTest {
     @Autowired
     private WebApplicationContext context;
     @Autowired
-    private OAuthHelper authHelper;
+    private OAuth2Helper authHelper;
     private MockMvc mockMvc;
 
     @Before
@@ -61,7 +62,8 @@ public class UserControllerIntegrationTest {
     @Test
     @Order(2)
     public void createUserShouldReturnWithTheCreatedUser() throws Exception {
-        RequestPostProcessor bearerToken = authHelper.addBearerToken(repository.findByUsername(adminUsername));
+        User user = repository.findByUsername(adminUsername);
+        RequestPostProcessor bearerToken = authHelper.addBearerToken(user.getUsername(), user.getRoles().stream().map(Enum::name).toArray(String[]::new));
         ResultActions resultActions = mockMvc.perform(post("/users").with(bearerToken).param("username", TEST_USER).param("password", "password")).andDo(print());
         resultActions
                 .andExpect(status().isOk())
@@ -73,7 +75,8 @@ public class UserControllerIntegrationTest {
     @Test
     @Order(3)
     public void getUsersShouldReturnAListWithAllRegisteredUsersWithRoleUser() throws Exception {
-        RequestPostProcessor bearerToken = authHelper.addBearerToken(repository.findByUsername(adminUsername));
+        User user = repository.findByUsername(adminUsername);
+        RequestPostProcessor bearerToken = authHelper.addBearerToken(user.getUsername(), user.getRoles().stream().map(Enum::name).toArray(String[]::new));
         ResultActions resultActions = mockMvc.perform(get("/users").with(bearerToken)).andDo(print());
         resultActions
                 .andExpect(status().isOk())
@@ -85,7 +88,8 @@ public class UserControllerIntegrationTest {
     @Order(4)
     public void removeUserShouldReturnWithTheRemovedUser() throws Exception {
         ResultActions resultActions;
-        RequestPostProcessor bearerToken = authHelper.addBearerToken(repository.findByUsername(adminUsername));
+        User user = repository.findByUsername(adminUsername);
+        RequestPostProcessor bearerToken = authHelper.addBearerToken(user.getUsername(), user.getRoles().stream().map(Enum::name).toArray(String[]::new));
         resultActions = mockMvc.perform(delete("/users").with(bearerToken).param("username", TEST_USER)).andDo(print());
         resultActions
                 .andExpect(status().isOk())
