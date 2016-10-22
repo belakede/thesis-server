@@ -12,6 +12,8 @@
     <modules>
         <module>suspect-game</module>
         <module>suspect-server</module>
+        <module>suspect-equipments</module>
+        <module>suspect-server-test</module>
     </modules>
 
     <properties>
