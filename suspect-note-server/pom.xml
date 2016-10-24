@@ -3,19 +3,21 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>suspect-server</artifactId>
         <groupId>me.belakede.thesis</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <artifactId>thesis-server</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>me.belakede.thesis</groupId>
     <artifactId>suspect-note-server</artifactId>
+    <version>1.0-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>me.belakede.thesis</groupId>
             <artifactId>suspect-equipments</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
