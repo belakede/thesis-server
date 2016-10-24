@@ -51,13 +51,6 @@
             <artifactId>hsqldb</artifactId>
             <version>${hsqldb.version}</version>
         </dependency>
-        <!-- test dependencies -->
-        <dependency>
-            <groupId>me.belakede.thesis</groupId>
-            <artifactId>suspect-server-test</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>
