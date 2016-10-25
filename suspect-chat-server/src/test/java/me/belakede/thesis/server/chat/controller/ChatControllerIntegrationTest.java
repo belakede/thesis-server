@@ -25,12 +25,13 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isOneOf;
 
 
 @Import(OAuth2Helper.class)
@@ -57,7 +58,8 @@ public class ChatControllerIntegrationTest {
 
         List<Thread> threads = Arrays.asList(
                 new Thread(new ChatStreamOpener(accessToken)), new Thread(new ChatStreamOpener(testUserAccessToken)),
-                new Thread(new ChatMessageSender(accessToken)), new Thread(new ChatStreamCloser(accessToken))
+                new Thread(new ChatMessageSender(accessToken, 1500)), new Thread(new ChatMessageSender(testUserAccessToken, 2000)),
+                new Thread(new ChatStreamCloser(accessToken, 5000))
         );
         threads.forEach(Thread::start);
         threads.forEach((thread) -> {
@@ -93,13 +95,17 @@ public class ChatControllerIntegrationTest {
             EventInput eventInput = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE)
                     .header("Authorization", "Bearer " + accessToken.getValue())
                     .post(Entity.entity(null, "text/plain"), EventInput.class);
+            List<Message> expectedMessages = new ArrayList<>(Arrays.asList(new Message(adminUsername, "Hello World!"), new Message("testuser1", "Hello World!"), new Message(adminUsername, "EOM")));
             while (!eventInput.isClosed()) {
                 final InboundEvent inboundEvent = eventInput.read();
                 if (inboundEvent == null) {
                     break;
                 }
-                Message message = inboundEvent.readData(Message.class, MediaType.APPLICATION_JSON_TYPE);
-                assertThat(message.getMessage(), isOneOf("Hello World!", TEST_ROOM_ID));
+                assertThat(expectedMessages.size(), greaterThan(0));
+                Message expectedMessage = expectedMessages.remove(0);
+                Message actualMessage = inboundEvent.readData(Message.class, MediaType.APPLICATION_JSON_TYPE);
+                assertThat(actualMessage.getMessage(), is(expectedMessage.getMessage()));
+                assertThat(actualMessage.getSender(), is(expectedMessage.getSender()));
             }
         }
     }
@@ -107,15 +113,17 @@ public class ChatControllerIntegrationTest {
     private final class ChatMessageSender implements Runnable {
 
         private final OAuth2AccessToken accessToken;
+        private final int sleepTime;
 
-        public ChatMessageSender(OAuth2AccessToken accessToken) {
+        public ChatMessageSender(OAuth2AccessToken accessToken, int sleepTime) {
             this.accessToken = accessToken;
+            this.sleepTime = sleepTime;
         }
 
         @Override
         public void run() {
             try {
-                Thread.sleep(1500);
+                Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -129,15 +137,17 @@ public class ChatControllerIntegrationTest {
     private final class ChatStreamCloser implements Runnable {
 
         private final OAuth2AccessToken accessToken;
+        private final int sleepTime;
 
-        public ChatStreamCloser(OAuth2AccessToken accessToken) {
+        public ChatStreamCloser(OAuth2AccessToken accessToken, int sleepTime) {
             this.accessToken = accessToken;
+            this.sleepTime = sleepTime;
         }
 
         @Override
         public void run() {
             try {
-                Thread.sleep(4000);
+                Thread.sleep(sleepTime);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -147,7 +157,6 @@ public class ChatControllerIntegrationTest {
             assertThat(post.getStatus(), is(200));
         }
     }
-
 
 
 }
