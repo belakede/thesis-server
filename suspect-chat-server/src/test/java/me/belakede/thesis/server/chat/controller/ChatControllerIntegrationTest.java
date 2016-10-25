@@ -1,8 +1,10 @@
 package me.belakede.thesis.server.chat.controller;
 
+import me.belakede.jackson.JacksonContextResolver;
 import me.belakede.junit.OrderedSpringRunner;
 import me.belakede.test.security.oauth2.OAuth2Helper;
 import me.belakede.thesis.server.auth.domain.Role;
+import me.belakede.thesis.server.chat.domain.Message;
 import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
@@ -23,9 +25,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isOneOf;
 
 
 @Import(OAuth2Helper.class)
@@ -44,53 +49,66 @@ public class ChatControllerIntegrationTest {
     @Autowired
     private OAuth2Helper authHelper;
 
-
     @Test
-    public void test() throws InterruptedException {
+    public void test() {
         OAuth2AccessToken accessToken = authHelper.createOAuth2AccessToken("admin", Role.ADMIN.getAuthority());
-        Thread firstThread = new Thread(new FirstTest(accessToken));
-        Thread secondThread = new Thread(new SecondTest(accessToken));
-        Thread thirdThread = new Thread(new ThirdTest(accessToken));
-        firstThread.start();
-        secondThread.start();
-        thirdThread.start();
+        createUser(accessToken, "testuser1");
+        OAuth2AccessToken testUserAccessToken = authHelper.createOAuth2AccessToken("testuser1", Role.USER.getAuthority());
 
-        firstThread.join();
-        secondThread.join();
-        thirdThread.join();
+        List<Thread> threads = Arrays.asList(
+                new Thread(new ChatStreamOpener(accessToken)), new Thread(new ChatStreamOpener(testUserAccessToken)),
+                new Thread(new ChatMessageSender(accessToken)), new Thread(new ChatStreamCloser(accessToken))
+        );
+        threads.forEach(Thread::start);
+        threads.forEach((thread) -> {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    private final class FirstTest implements Runnable {
+    private void createUser(OAuth2AccessToken accessToken, String username) {
+        Client client = ClientBuilder.newClient();
+        WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/users").queryParam("username", username).queryParam("password", "password");
+        webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE)
+                .header("Authorization", "Bearer " + accessToken.getValue())
+                .post(Entity.entity(null, "text/plain"));
+    }
+
+    private final class ChatStreamOpener implements Runnable {
 
         private final OAuth2AccessToken accessToken;
 
-        public FirstTest(OAuth2AccessToken accessToken) {
+        public ChatStreamOpener(OAuth2AccessToken accessToken) {
             this.accessToken = accessToken;
         }
 
         @Override
         public void run() {
-            Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
+            Client client = ClientBuilder.newBuilder().register(SseFeature.class, JacksonContextResolver.class).build();
             WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/join").queryParam("room", TEST_ROOM_ID);
+            webTarget.register(JacksonContextResolver.class);
             EventInput eventInput = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE)
                     .header("Authorization", "Bearer " + accessToken.getValue())
                     .post(Entity.entity(null, "text/plain"), EventInput.class);
             while (!eventInput.isClosed()) {
                 final InboundEvent inboundEvent = eventInput.read();
                 if (inboundEvent == null) {
-                    System.err.println("Connection has been closed!");
                     break;
                 }
-                System.out.println(inboundEvent.getName() + "; " + inboundEvent.readData(String.class));
+                Message message = inboundEvent.readData(Message.class, MediaType.APPLICATION_JSON_TYPE);
+                assertThat(message.getMessage(), isOneOf("Hello World!", TEST_ROOM_ID));
             }
         }
     }
 
-    private final class SecondTest implements Runnable {
+    private final class ChatMessageSender implements Runnable {
 
         private final OAuth2AccessToken accessToken;
 
-        public SecondTest(OAuth2AccessToken accessToken) {
+        public ChatMessageSender(OAuth2AccessToken accessToken) {
             this.accessToken = accessToken;
         }
 
@@ -108,12 +126,11 @@ public class ChatControllerIntegrationTest {
         }
     }
 
-
-    private final class ThirdTest implements Runnable {
+    private final class ChatStreamCloser implements Runnable {
 
         private final OAuth2AccessToken accessToken;
 
-        public ThirdTest(OAuth2AccessToken accessToken) {
+        public ChatStreamCloser(OAuth2AccessToken accessToken) {
             this.accessToken = accessToken;
         }
 
