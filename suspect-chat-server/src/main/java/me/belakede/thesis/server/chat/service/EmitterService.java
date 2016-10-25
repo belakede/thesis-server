@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -23,7 +24,6 @@ public class EmitterService {
 
     public SseEmitter createEmitter() {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        emitter.onCompletion(() -> emitters.remove(emitter));
         emitters.add(emitter);
         return emitter;
     }
@@ -39,6 +39,11 @@ public class EmitterService {
                 LOGGER.warn("{}", e);
             }
         });
+    }
+
+    public void close() {
+        emitters.forEach(ResponseBodyEmitter::complete);
+        emitters.clear();
     }
 
 }
