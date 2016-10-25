@@ -53,7 +53,7 @@ public class ChatController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/close", method = RequestMethod.POST)
     public void close(Principal principal, @NotNull String room) {
-        emitterService.broadcast(new Message(principal.getName(), room));
+        emitterService.broadcast(new Message(principal.getName(), "EOM"));
         emitterService.close();
         senderService.deleteByRoom(room);
     }
