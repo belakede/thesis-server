@@ -30,7 +30,7 @@ public class OAuth2Helper {
         };
     }
 
-    public OAuth2AccessToken createOAuth2AccessToken(String username, String[] authorities) {
+    public OAuth2AccessToken createOAuth2AccessToken(String username, String... authorities) {
         OAuth2Request oauth2Request = new OAuth2Request(null, clientId, null, true, null, null, null, null, null);
         Authentication userauth = new TestingAuthenticationToken(username, null, authorities);
         OAuth2Authentication oauth2auth = new OAuth2Authentication(oauth2Request, userauth);
