@@ -28,4 +28,8 @@ public class SenderService {
         return sender;
     }
 
+    public void deleteByRoom(String room) {
+        repository.deleteByRoom(room);
+    }
+
 }

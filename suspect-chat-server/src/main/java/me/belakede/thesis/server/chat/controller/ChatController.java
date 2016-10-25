@@ -1,5 +1,6 @@
 package me.belakede.thesis.server.chat.controller;
 
+import me.belakede.thesis.server.chat.domain.Message;
 import me.belakede.thesis.server.chat.domain.Sender;
 import me.belakede.thesis.server.chat.exception.MissingSenderException;
 import me.belakede.thesis.server.chat.service.EmitterService;
@@ -8,6 +9,7 @@ import me.belakede.thesis.server.chat.service.SenderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,6 +48,14 @@ public class ChatController {
         LOGGER.info("{} would like to send the following message: {}", principal.getName(), message);
         Sender sender = senderService.findByNameAndRoom(principal.getName(), room);
         emitterService.broadcast(messageService.create(sender, message));
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @RequestMapping(value = "/close", method = RequestMethod.POST)
+    public void close(Principal principal, @NotNull String room) {
+        emitterService.broadcast(new Message(principal.getName(), room));
+        emitterService.close();
+        senderService.deleteByRoom(room);
     }
 
 }
