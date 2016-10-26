@@ -2,6 +2,7 @@ package me.belakede.thesis.server.chat.service;
 
 import me.belakede.thesis.server.chat.domain.Sender;
 import me.belakede.thesis.server.chat.exception.MissingSenderException;
+import me.belakede.thesis.server.chat.repository.SenderRepository;
 import me.belakede.thesis.test.chat.configuration.SenderServiceTestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -26,6 +29,9 @@ public class SenderServiceTest {
 
     @Autowired
     private SenderService senderService;
+
+    @Autowired
+    private SenderRepository repository;
 
     @Test
     public void createShouldPersistTheSpecifiedSender() {
@@ -74,6 +80,19 @@ public class SenderServiceTest {
         entityManager.persist(expectedSender);
         Sender actualSender = senderService.findByNameAndRoom("user", "room");
         assertThat(actualSender, is(expectedSender));
+    }
+
+    @Test
+    public void deleteByRoomShouldRemoveAllSenderInRoom() {
+        repository.save(new Sender("admin", "room"));
+        repository.save(new Sender("user", "room"));
+        repository.save(new Sender("demo", "room"));
+
+        senderService.deleteByRoom("room");
+
+        List<Sender> senders = repository.findByRoom("room");
+
+        assertThat(senders.size(), is(0));
     }
 
 }
