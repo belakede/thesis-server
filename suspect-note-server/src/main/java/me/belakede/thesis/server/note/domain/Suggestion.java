@@ -29,6 +29,7 @@ public class Suggestion {
     private Weapon weapon;
 
     public Suggestion() {
+        // It's necessary for entity classes
     }
 
     public Suggestion(Author author, Suspect suspect, Room room, Weapon weapon) {
@@ -80,8 +81,12 @@ public class Suggestion {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Suggestion that = (Suggestion) o;
 
