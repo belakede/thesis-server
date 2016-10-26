@@ -28,4 +28,8 @@ public class AuthorService {
         return author;
     }
 
+    public void deleteByRoom(String room) {
+        authorRepository.deleteByRoom(room);
+    }
+
 }
