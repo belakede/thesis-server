@@ -56,6 +56,30 @@ public class SuggestionTest {
             actualSuggestion.setWeapon(Weapon.WRENCH);
             assertThat(actualSuggestion, is(not(expectedSuggestion)));
         }
+
+        @Test
+        public void testHashCodeShouldReturnDifferentValueWhenSuspectIsNull() throws Exception {
+            Suggestion expectedSuggestion = createInstance();
+            Suggestion actualSuggestion = createInstance();
+            actualSuggestion.setSuspect(null);
+            assertThat(actualSuggestion.hashCode(), is(not(expectedSuggestion.hashCode())));
+        }
+
+        @Test
+        public void testHashCodeShouldReturnDifferentValueWhenRoomIsNull() throws Exception {
+            Suggestion expectedSuggestion = createInstance();
+            Suggestion actualSuggestion = createInstance();
+            actualSuggestion.setRoom(null);
+            assertThat(actualSuggestion.hashCode(), is(not(expectedSuggestion.hashCode())));
+        }
+
+        @Test
+        public void testHashCodeShouldReturnDifferentValueWhenWeaponIsNull() throws Exception {
+            Suggestion expectedSuggestion = createInstance();
+            Suggestion actualSuggestion = createInstance();
+            actualSuggestion.setWeapon(null);
+            assertThat(actualSuggestion.hashCode(), is(not(expectedSuggestion.hashCode())));
+        }
     }
 
 }
