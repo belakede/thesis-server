@@ -6,7 +6,6 @@ import me.belakede.thesis.game.equipment.Suspect;
 import me.belakede.thesis.game.equipment.Weapon;
 import me.belakede.thesis.server.note.domain.Author;
 import me.belakede.thesis.server.note.domain.Note;
-import me.belakede.thesis.server.note.repository.NoteRepository;
 import me.belakede.thesis.server.test.note.configuration.NoteServiceTestConfiguration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,9 +29,6 @@ public class NoteServiceTest {
 
     @Autowired
     private TestEntityManager entityManager;
-
-    @Autowired
-    private NoteRepository repository;
 
     @Autowired
     private NoteService noteService;
