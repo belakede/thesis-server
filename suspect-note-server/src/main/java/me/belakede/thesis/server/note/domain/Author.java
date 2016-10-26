@@ -24,6 +24,7 @@ public class Author {
     private List<Note> notes;
 
     public Author() {
+        // It's necessary for entity classes
     }
 
     public Author(String name, String room) {
@@ -55,6 +56,14 @@ public class Author {
         this.room = room;
     }
 
+    public Suggestion getSuggestion() {
+        return suggestion;
+    }
+
+    public void setSuggestion(Suggestion suggestion) {
+        this.suggestion = suggestion;
+    }
+
     public List<Note> getNotes() {
         return notes;
     }
@@ -65,8 +74,12 @@ public class Author {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Author author = (Author) o;
 
