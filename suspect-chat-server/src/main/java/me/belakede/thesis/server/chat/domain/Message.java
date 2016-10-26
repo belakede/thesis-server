@@ -17,6 +17,12 @@ public class Message {
         this.time = LocalDateTime.now();
     }
 
+    public Message(String sender, String message, LocalDateTime time) {
+        this.sender = sender;
+        this.message = message;
+        this.time = time;
+    }
+
     public String getSender() {
         return sender;
     }
@@ -48,10 +54,9 @@ public class Message {
 
         Message message1 = (Message) o;
 
-        return sender != null ? sender.equals(message1.sender) : message1.sender == null
-                && (time != null ? time.equals(message1.time) : message1.time == null
-                && (message != null ? message.equals(message1.message) : message1.message == null));
-
+        return (sender != null ? sender.equals(message1.sender) : message1.sender == null)
+                && (time != null ? time.equals(message1.time) : message1.time == null)
+                && (message != null ? message.equals(message1.message) : message1.message == null);
     }
 
     @Override
@@ -60,5 +65,14 @@ public class Message {
         result = 31 * result + (time != null ? time.hashCode() : 0);
         result = 31 * result + (message != null ? message.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "sender='" + sender + '\'' +
+                ", time=" + time +
+                ", message='" + message + '\'' +
+                '}';
     }
 }
