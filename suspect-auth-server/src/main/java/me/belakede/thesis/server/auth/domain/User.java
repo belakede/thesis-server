@@ -82,8 +82,8 @@ public class User {
 
         User user = (User) o;
 
-        return enabled == user.enabled && (username != null ? username.equals(user.username) : user.username == null
-                && (roles != null ? roles.equals(user.roles) : user.roles == null));
+        return (enabled == user.enabled) && (username != null ? username.equals(user.username) : user.username == null)
+                && (roles != null ? roles.equals(user.roles) : user.roles == null);
     }
 
     @Override
