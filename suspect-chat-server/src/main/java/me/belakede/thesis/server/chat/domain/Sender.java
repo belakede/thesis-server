@@ -54,14 +54,17 @@ public class Sender {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Sender sender = (Sender) o;
 
-        if (name != null ? !name.equals(sender.name) : sender.name != null) return false;
-        return room != null ? room.equals(sender.room) : sender.room == null;
-
+        return (name != null ? name.equals(sender.name) : sender.name == null)
+                && (room != null ? room.equals(sender.room) : sender.room == null);
     }
 
     @Override

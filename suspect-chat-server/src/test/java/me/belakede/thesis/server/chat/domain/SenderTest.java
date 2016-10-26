@@ -15,12 +15,12 @@ public class SenderTest {
 
         @Override
         protected Sender createInstance() throws Exception {
-            return new Sender("admin");
+            return new Sender("admin", "room");
         }
 
         @Override
         protected Sender createNotEqualInstance() throws Exception {
-            return new Sender("demo");
+            return new Sender("demo", "room");
         }
     }
 
