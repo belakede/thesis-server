@@ -70,7 +70,7 @@ public class Author {
 
         Author author = (Author) o;
 
-        return name != null ? name.equals(author.name) : author.name == null
+        return (name != null ? name.equals(author.name) : author.name == null)
                 && (room != null ? room.equals(author.room) : author.room == null);
     }
 
