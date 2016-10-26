@@ -1,6 +1,6 @@
 package me.belakede.thesis.server.chat.domain;
 
-import junitx.extensions.EqualsHashCodeTestCase;
+import me.belakede.junit.ExtendedEqualsHashCodeTestCase;
 import me.belakede.time.TimeMachine;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -8,6 +8,7 @@ import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @RunWith(Enclosed.class)
 public class MessageTest {
@@ -22,10 +23,10 @@ public class MessageTest {
         TimeMachine.useSystemDefaultZoneClock();
     }
 
-    public static final class MessageEqualsHashCodeTest extends EqualsHashCodeTestCase {
+    public static final class MessageEqualsHashCodeTest extends ExtendedEqualsHashCodeTestCase {
 
         public MessageEqualsHashCodeTest(String name) {
-            super(name);
+            super(name, Message.class, Arrays.asList("sender", "time", "message"));
         }
 
         @Override

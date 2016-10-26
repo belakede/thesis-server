@@ -1,16 +1,18 @@
 package me.belakede.thesis.server.chat.domain;
 
-import junitx.extensions.EqualsHashCodeTestCase;
+import me.belakede.junit.ExtendedEqualsHashCodeTestCase;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
+
+import java.util.Arrays;
 
 @RunWith(Enclosed.class)
 public class SenderTest {
 
-    public static final class SenderEqualsHashCodeTest extends EqualsHashCodeTestCase {
+    public static final class SenderEqualsHashCodeTest extends ExtendedEqualsHashCodeTestCase {
 
         public SenderEqualsHashCodeTest(String name) {
-            super(name);
+            super(name, Sender.class, Arrays.asList("name", "room"));
         }
 
         @Override
