@@ -19,10 +19,6 @@ public class Sender {
     public Sender() {
     }
 
-    public Sender(String name) {
-        this.name = name;
-    }
-
     public Sender(String name, String room) {
         this.name = name;
         this.room = room;
