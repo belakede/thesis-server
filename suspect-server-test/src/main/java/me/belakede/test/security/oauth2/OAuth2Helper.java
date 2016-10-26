@@ -11,6 +11,9 @@ import org.springframework.security.oauth2.provider.token.AuthorizationServerTok
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
+/**
+ * https://amsterdam.luminis.eu/2015/11/12/integration-testing-a-spring-restful-web-service-secured-with-oauth2/
+ */
 @Component
 public class OAuth2Helper {
 
