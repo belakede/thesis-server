@@ -10,7 +10,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class EmitterService {
@@ -29,16 +31,18 @@ public class EmitterService {
     }
 
     public void broadcast(Message message) {
+        Set<SseEmitter> closed = new HashSet<>();
         emitters.forEach((SseEmitter emitter) -> {
             try {
                 emitter.send(message, MediaType.APPLICATION_JSON);
             } catch (IOException e) {
-                emitter.complete();
-                emitters.remove(emitter);
+                closed.add(emitter);
                 LOGGER.warn("Can't broadcast the message for emitter {} - Connection closed.", emitter);
                 LOGGER.warn("{}", e);
             }
         });
+        closed.forEach(ResponseBodyEmitter::complete);
+        emitters.removeAll(closed);
     }
 
     public void close() {
