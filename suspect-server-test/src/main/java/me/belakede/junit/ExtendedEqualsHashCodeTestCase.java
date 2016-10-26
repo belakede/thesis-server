@@ -1,6 +1,8 @@
 package me.belakede.junit;
 
 import junitx.extensions.EqualsHashCodeTestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -9,6 +11,7 @@ import java.util.Set;
 
 public abstract class ExtendedEqualsHashCodeTestCase<T> extends EqualsHashCodeTestCase {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(ExtendedEqualsHashCodeTestCase.class);
     private final Class<T> typeClass;
     private final Set<String> nullableFields;
 
@@ -38,7 +41,7 @@ public abstract class ExtendedEqualsHashCodeTestCase<T> extends EqualsHashCodeTe
                 junitx.framework.Assert.assertEquals(instance, secondInstance);
                 junitx.framework.Assert.assertEquals(secondInstance, instance);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.info("testEqualsAgainstNullableFields failed: {}", e);
             }
         });
     }
@@ -57,7 +60,7 @@ public abstract class ExtendedEqualsHashCodeTestCase<T> extends EqualsHashCodeTe
                 junitx.framework.Assert.assertEquals(instance, secondInstance);
                 junitx.framework.Assert.assertEquals(secondInstance, instance);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOGGER.info("testHashCodeAgainstNullableFields failed: {}", e);
             }
         });
     }
