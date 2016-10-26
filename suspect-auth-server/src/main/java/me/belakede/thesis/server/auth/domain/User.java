@@ -78,12 +78,17 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         User user = (User) o;
 
-        return (enabled == user.enabled) && (username != null ? username.equals(user.username) : user.username == null)
+        return (enabled == user.enabled)
+                && (username != null ? username.equals(user.username) : user.username == null)
                 && (roles != null ? roles.equals(user.roles) : user.roles == null);
     }
 
@@ -100,7 +105,6 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='********'" +
                 ", enabled=" + enabled +
                 ", roles=" + roles +
                 '}';
