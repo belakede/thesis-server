@@ -91,7 +91,8 @@ public class Note {
 
         return (author != null ? author.equals(note.author) : note.author == null)
                 && (owner != null ? owner.equals(note.owner) : note.owner == null)
-                && (card != null ? card.equals(note.card) : note.card == null && marker == note.marker);
+                && (card != null ? card.equals(note.card) : note.card == null)
+                && (marker == note.marker);
     }
 
     @Override

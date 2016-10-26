@@ -3,10 +3,15 @@ package me.belakede.thesis.server.note.domain;
 import me.belakede.junit.ExtendedEqualsHashCodeTestCase;
 import me.belakede.thesis.game.equipment.Marker;
 import me.belakede.thesis.game.equipment.Weapon;
+import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
 import java.util.Arrays;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 
 @RunWith(Enclosed.class)
 public class NoteTest {
@@ -25,6 +30,22 @@ public class NoteTest {
         @Override
         protected Note createNotEqualInstance() throws Exception {
             return new Note(new Author("testuser", "test-room"), "demo", Weapon.ROPE, Marker.YES);
+        }
+
+        @Test
+        public void testEqualsShouldReturnFalseWhenMarkerIsDifferent() throws Exception {
+            Note actualNote = createInstance();
+            Note expectedNote = createInstance();
+            expectedNote.setMarker(Marker.MAYBE_NOT);
+            assertThat(actualNote, is(not(expectedNote)));
+        }
+
+        @Test
+        public void testHashCodeShouldReturnDifferentValueWhenMarkerIsNull() throws Exception {
+            Note actualNote = createInstance();
+            Note expectedNote = createInstance();
+            expectedNote.setMarker(null);
+            assertThat(actualNote.hashCode(), is(not(expectedNote.hashCode())));
         }
     }
 
