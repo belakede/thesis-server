@@ -90,7 +90,7 @@ public class Suggestion {
 
         Suggestion that = (Suggestion) o;
 
-        return author != null ? author.equals(that.author) : that.author == null
+        return (author != null ? author.equals(that.author) : that.author == null)
                 && suspect == that.suspect && room == that.room && weapon == that.weapon;
     }
 
