@@ -26,6 +26,7 @@ public class User {
     private Set<Role> roles;
 
     public User() {
+        // It's required for entity
     }
 
     public User(String username, String password, boolean enabled, Set<Role> roles) {
