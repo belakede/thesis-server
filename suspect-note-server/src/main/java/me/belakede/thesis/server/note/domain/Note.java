@@ -26,6 +26,7 @@ public class Note {
     private Marker marker;
 
     public Note() {
+        // It's necessary for entity classes
     }
 
     public Note(Author author, String owner, String card, Marker marker) {
@@ -77,14 +78,18 @@ public class Note {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Note note = (Note) o;
 
-        return author != null ? author.equals(note.author) : note.author == null
-                && (owner != null ? owner.equals(note.owner) : note.owner == null
-                && (card != null ? card.equals(note.card) : note.card == null && marker == note.marker));
+        return (author != null ? author.equals(note.author) : note.author == null)
+                && (owner != null ? owner.equals(note.owner) : note.owner == null)
+                && (card != null ? card.equals(note.card) : note.card == null && marker == note.marker);
     }
 
     @Override
