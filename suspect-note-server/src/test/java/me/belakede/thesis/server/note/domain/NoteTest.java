@@ -2,6 +2,7 @@ package me.belakede.thesis.server.note.domain;
 
 import me.belakede.junit.ExtendedEqualsHashCodeTestCase;
 import me.belakede.thesis.game.equipment.Marker;
+import me.belakede.thesis.game.equipment.Weapon;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;
 
@@ -18,12 +19,12 @@ public class NoteTest {
 
         @Override
         protected Note createInstance() throws Exception {
-            return new Note(new Author("admin", "test-room"), "demo", "ROPE", Marker.MAYBE);
+            return new Note(new Author("admin", "test-room"), "demo", Weapon.ROPE, Marker.MAYBE);
         }
 
         @Override
         protected Note createNotEqualInstance() throws Exception {
-            return new Note(new Author("testuser", "test-room"), "demo", "ROPE", Marker.YES);
+            return new Note(new Author("testuser", "test-room"), "demo", Weapon.ROPE, Marker.YES);
         }
     }
 

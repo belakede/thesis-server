@@ -1,5 +1,6 @@
 package me.belakede.thesis.server.note.domain;
 
+import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.game.equipment.Marker;
 
 import javax.persistence.*;
@@ -12,24 +13,25 @@ public class Note {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
+    @JoinColumn
     private Author author;
 
     @Column(nullable = false, updatable = false)
-    private String card;
+    private Card card;
 
     @Column(nullable = false, updatable = false)
     private String owner;
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private Marker marker;
 
     public Note() {
         // It's necessary for entity classes
     }
 
-    public Note(Author author, String owner, String card, Marker marker) {
+    public Note(Author author, String owner, Card card, Marker marker) {
         this.author = author;
         this.owner = owner;
         this.card = card;
@@ -60,11 +62,11 @@ public class Note {
         this.owner = owner;
     }
 
-    public String getCard() {
+    public Card getCard() {
         return card;
     }
 
-    public void setCard(String card) {
+    public void setCard(Card card) {
         this.card = card;
     }
 

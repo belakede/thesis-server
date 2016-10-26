@@ -47,7 +47,7 @@ public class NoteController {
     public Note store(Principal principal, @RequestParam @NotNull String room, @RequestParam @NotNull Card card,
                       @RequestParam @NotNull String owner, @RequestParam @NotNull Marker marker) throws MissingAuthorException {
         Author author = authorService.findByNameAndRoom(principal.getName(), room);
-        return noteService.create(author, card, owner, marker);
+        return noteService.create(new Note(author, owner, card, marker));
     }
 
 }
