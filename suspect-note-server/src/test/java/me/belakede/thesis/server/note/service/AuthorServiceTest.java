@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Import;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -78,6 +80,19 @@ public class AuthorServiceTest {
         entityManager.persist(expectedAuthor);
         Author actualAuthor = authorService.findByNameAndRoom("user", "room");
         assertThat(actualAuthor, is(expectedAuthor));
+    }
+
+    @Test
+    public void deleteByRoomShouldRemoveAllSenderInRoom() {
+        repository.save(new Author("admin", "room"));
+        repository.save(new Author("user", "room"));
+        repository.save(new Author("demo", "room"));
+
+        authorService.deleteByRoom("room");
+
+        List<Author> senders = repository.findByRoom("room");
+
+        assertThat(senders.size(), is(0));
     }
 
 }
