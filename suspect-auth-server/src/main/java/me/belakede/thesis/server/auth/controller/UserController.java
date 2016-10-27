@@ -3,14 +3,14 @@ package me.belakede.thesis.server.auth.controller;
 import me.belakede.thesis.server.auth.domain.Role;
 import me.belakede.thesis.server.auth.domain.User;
 import me.belakede.thesis.server.auth.exception.MissingUserException;
+import me.belakede.thesis.server.auth.request.UserRequest;
+import me.belakede.thesis.server.auth.response.UserResponse;
 import me.belakede.thesis.server.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,15 +27,17 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/users", method = RequestMethod.POST)
-    public User createUser(@RequestParam String username, @RequestParam String password) {
-        return service.create(username, password);
+    @RequestMapping(value = "/users", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public UserResponse createUser(@RequestBody UserRequest userRequest) {
+        User user = service.create(userRequest.getUsername(), userRequest.getPassword());
+        return new UserResponse(user.getUsername());
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @RequestMapping(value = "/users", method = RequestMethod.DELETE)
-    public User removeUser(@RequestParam String username) throws MissingUserException {
-        return service.remove(username);
+    @RequestMapping(value = "/users/{username}", method = RequestMethod.DELETE)
+    public UserResponse removeUser(@PathVariable("username") String username) throws MissingUserException {
+        User user = service.remove(username);
+        return new UserResponse(user.getUsername());
     }
 
 }
