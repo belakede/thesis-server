@@ -5,6 +5,7 @@ import me.belakede.junit.OrderedSpringRunner;
 import me.belakede.test.security.oauth2.OAuth2Helper;
 import me.belakede.thesis.server.auth.domain.Role;
 import me.belakede.thesis.server.chat.domain.Message;
+import me.belakede.thesis.server.chat.request.ChatRequest;
 import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
@@ -17,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
-import org.springframework.web.context.WebApplicationContext;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -45,8 +45,6 @@ public class ChatControllerIntegrationTest {
     private String adminUsername;
     @LocalServerPort
     private int randomServerPort;
-    @Autowired
-    private WebApplicationContext context;
     @Autowired
     private OAuth2Helper authHelper;
 
@@ -90,11 +88,11 @@ public class ChatControllerIntegrationTest {
         @Override
         public void run() {
             Client client = ClientBuilder.newBuilder().register(SseFeature.class, JacksonContextResolver.class).build();
-            WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/join").queryParam("room", TEST_ROOM_ID);
+            WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/join");
             webTarget.register(JacksonContextResolver.class);
             EventInput eventInput = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE)
                     .header("Authorization", "Bearer " + accessToken.getValue())
-                    .post(Entity.entity(null, "text/plain"), EventInput.class);
+                    .post(Entity.json(new ChatRequest(TEST_ROOM_ID)), EventInput.class);
             List<Message> expectedMessages = new ArrayList<>(Arrays.asList(new Message(adminUsername, "Hello World!"), new Message("testuser1", "Hello World!"), new Message(adminUsername, "EOM")));
             while (!eventInput.isClosed()) {
                 final InboundEvent inboundEvent = eventInput.read();
@@ -128,8 +126,10 @@ public class ChatControllerIntegrationTest {
                 e.printStackTrace();
             }
             Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-            WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/send").queryParam("room", TEST_ROOM_ID).queryParam("message", "Hello World!");
-            Response post = webTarget.request().header("Authorization", "Bearer " + accessToken.getValue()).post(Entity.entity(null, "text/plain"));
+            WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/send");
+            Response post = webTarget.request()
+                    .header("Authorization", "Bearer " + accessToken.getValue())
+                    .post(Entity.json(new ChatRequest(TEST_ROOM_ID, "Hello World!")));
             assertThat(post.getStatus(), is(200));
         }
     }
@@ -152,8 +152,10 @@ public class ChatControllerIntegrationTest {
                 e.printStackTrace();
             }
             Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
-            WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/close").queryParam("room", TEST_ROOM_ID);
-            Response post = webTarget.request().header("Authorization", "Bearer " + accessToken.getValue()).post(Entity.entity(null, "text/plain"));
+            WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/close");
+            Response post = webTarget.request()
+                    .header("Authorization", "Bearer " + accessToken.getValue())
+                    .post(Entity.json(new ChatRequest(TEST_ROOM_ID)));
             assertThat(post.getStatus(), is(200));
         }
     }

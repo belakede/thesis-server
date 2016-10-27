@@ -3,6 +3,7 @@ package me.belakede.thesis.server.chat.controller;
 import me.belakede.thesis.server.chat.domain.Message;
 import me.belakede.thesis.server.chat.domain.Sender;
 import me.belakede.thesis.server.chat.exception.MissingSenderException;
+import me.belakede.thesis.server.chat.request.ChatRequest;
 import me.belakede.thesis.server.chat.service.EmitterService;
 import me.belakede.thesis.server.chat.service.MessageService;
 import me.belakede.thesis.server.chat.service.SenderService;
@@ -11,12 +12,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
 
 @RestController
@@ -38,24 +39,24 @@ public class ChatController {
     }
 
     @RequestMapping(value = "/join", method = RequestMethod.POST)
-    public SseEmitter join(Principal principal, @NotNull String room) {
-        senderService.create(principal.getName(), room);
+    public SseEmitter join(Principal principal, @RequestBody ChatRequest chatRequest) {
+        senderService.create(principal.getName(), chatRequest.getRoom());
         return emitterService.createEmitter();
     }
 
     @RequestMapping(value = "/send", method = RequestMethod.POST)
-    public void send(Principal principal, @NotNull String message, @NotNull String room) throws MissingSenderException {
-        LOGGER.info("{} would like to send the following message: {}", principal.getName(), message);
-        Sender sender = senderService.findByNameAndRoom(principal.getName(), room);
-        emitterService.broadcast(messageService.create(sender, message));
+    public void send(Principal principal, @RequestBody ChatRequest chatRequest) throws MissingSenderException {
+        LOGGER.info("{} would like to send the following message: {}", principal.getName(), chatRequest.getMessage());
+        Sender sender = senderService.findByNameAndRoom(principal.getName(), chatRequest.getRoom());
+        emitterService.broadcast(messageService.create(sender, chatRequest.getMessage()));
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/close", method = RequestMethod.POST)
-    public void close(Principal principal, @NotNull String room) {
+    public void close(Principal principal, @RequestBody ChatRequest chatRequest) {
         emitterService.broadcast(new Message(principal.getName(), "EOM"));
         emitterService.close();
-        senderService.deleteByRoom(room);
+        senderService.deleteByRoom(chatRequest.getRoom());
     }
 
 }
