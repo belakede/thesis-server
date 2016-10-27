@@ -8,10 +8,7 @@ import me.belakede.thesis.server.note.exception.MissingSuggestionException;
 import me.belakede.thesis.server.note.service.AuthorService;
 import me.belakede.thesis.server.note.service.SuggestionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
 import java.security.Principal;
@@ -35,8 +32,9 @@ public class SuggestionController {
         return suggestionService.read(author);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
-    public Suggestion store(Principal principal, @RequestParam @NotNull String room, @RequestParam @NotNull Suspicion suspicion) throws MissingAuthorException {
+    @RequestMapping(value = "/{room}", method = RequestMethod.POST)
+    public Suggestion store(Principal principal, @PathVariable("room") String room, Suspicion suspicion) throws MissingAuthorException {
+        System.err.println("suspicion: " + suspicion);
         Author author = authorService.findByNameAndRoom(principal.getName(), room);
         return suggestionService.store(author, suspicion);
     }
