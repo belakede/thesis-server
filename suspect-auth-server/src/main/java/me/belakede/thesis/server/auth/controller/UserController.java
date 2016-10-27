@@ -5,6 +5,7 @@ import me.belakede.thesis.server.auth.domain.User;
 import me.belakede.thesis.server.auth.exception.MissingUserException;
 import me.belakede.thesis.server.auth.request.UserRequest;
 import me.belakede.thesis.server.auth.response.UserResponse;
+import me.belakede.thesis.server.auth.response.UsersResponse;
 import me.belakede.thesis.server.auth.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -13,6 +14,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @EnableResourceServer
@@ -22,8 +25,10 @@ public class UserController {
     private UserService service;
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public List<User> getUsers() {
-        return service.findByRole(Role.USER);
+    public UsersResponse getUsers() {
+        List<User> users = service.findByRole(Role.USER);
+        Set<UserResponse> userResponses = users.stream().map(u -> new UserResponse(u.getUsername())).collect(Collectors.toSet());
+        return new UsersResponse(userResponses);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
