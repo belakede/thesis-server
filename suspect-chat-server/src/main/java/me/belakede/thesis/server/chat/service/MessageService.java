@@ -1,8 +1,8 @@
 package me.belakede.thesis.server.chat.service;
 
-import me.belakede.thesis.server.chat.domain.Message;
 import me.belakede.thesis.server.chat.domain.Sender;
 import me.belakede.thesis.server.chat.exception.MissingSenderException;
+import me.belakede.thesis.server.chat.response.Message;
 import org.springframework.stereotype.Service;
 
 @Service

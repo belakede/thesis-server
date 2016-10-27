@@ -1,8 +1,8 @@
 package me.belakede.thesis.server.chat.service;
 
-import me.belakede.thesis.server.chat.domain.Message;
 import me.belakede.thesis.server.chat.domain.Sender;
 import me.belakede.thesis.server.chat.exception.MissingSenderException;
+import me.belakede.thesis.server.chat.response.Message;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class MessageServiceTest {
         Sender sender = new Sender("testuser", "testroom");
         Message message = testSubject.create(sender, "Test message");
         assertThat(message.getSender(), is("testuser"));
-        assertThat(message.getMessage(), is("Test message"));
+        assertThat(message.getContent(), is("Test message"));
     }
 
     @Test(expected = MissingSenderException.class)
