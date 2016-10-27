@@ -1,6 +1,6 @@
 package me.belakede.thesis.server.chat.service;
 
-import me.belakede.thesis.server.chat.domain.Message;
+import me.belakede.thesis.server.chat.response.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

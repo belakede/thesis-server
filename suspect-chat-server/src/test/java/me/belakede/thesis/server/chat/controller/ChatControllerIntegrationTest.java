@@ -1,11 +1,10 @@
 package me.belakede.thesis.server.chat.controller;
 
-import me.belakede.jackson.JacksonContextResolver;
 import me.belakede.junit.OrderedSpringRunner;
 import me.belakede.test.security.oauth2.OAuth2Helper;
 import me.belakede.thesis.server.auth.domain.Role;
-import me.belakede.thesis.server.chat.domain.Message;
 import me.belakede.thesis.server.chat.request.ChatRequest;
+import me.belakede.thesis.server.chat.response.Message;
 import org.glassfish.jersey.media.sse.EventInput;
 import org.glassfish.jersey.media.sse.InboundEvent;
 import org.glassfish.jersey.media.sse.SseFeature;
@@ -87,9 +86,8 @@ public class ChatControllerIntegrationTest {
 
         @Override
         public void run() {
-            Client client = ClientBuilder.newBuilder().register(SseFeature.class, JacksonContextResolver.class).build();
+            Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
             WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/join");
-            webTarget.register(JacksonContextResolver.class);
             EventInput eventInput = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE)
                     .header("Authorization", "Bearer " + accessToken.getValue())
                     .post(Entity.json(new ChatRequest(TEST_ROOM_ID)), EventInput.class);
@@ -102,7 +100,7 @@ public class ChatControllerIntegrationTest {
                 assertThat(expectedMessages.size(), greaterThan(0));
                 Message expectedMessage = expectedMessages.remove(0);
                 Message actualMessage = inboundEvent.readData(Message.class, MediaType.APPLICATION_JSON_TYPE);
-                assertThat(actualMessage.getMessage(), is(expectedMessage.getMessage()));
+                assertThat(actualMessage.getContent(), is(expectedMessage.getContent()));
                 assertThat(actualMessage.getSender(), is(expectedMessage.getSender()));
             }
         }

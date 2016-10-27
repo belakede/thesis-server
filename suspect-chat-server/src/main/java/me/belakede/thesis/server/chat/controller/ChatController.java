@@ -1,9 +1,9 @@
 package me.belakede.thesis.server.chat.controller;
 
-import me.belakede.thesis.server.chat.domain.Message;
 import me.belakede.thesis.server.chat.domain.Sender;
 import me.belakede.thesis.server.chat.exception.MissingSenderException;
 import me.belakede.thesis.server.chat.request.ChatRequest;
+import me.belakede.thesis.server.chat.response.Message;
 import me.belakede.thesis.server.chat.service.EmitterService;
 import me.belakede.thesis.server.chat.service.MessageService;
 import me.belakede.thesis.server.chat.service.SenderService;
