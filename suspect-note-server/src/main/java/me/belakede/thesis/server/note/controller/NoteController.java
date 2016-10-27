@@ -1,22 +1,24 @@
 package me.belakede.thesis.server.note.controller;
 
 import me.belakede.thesis.game.equipment.Card;
-import me.belakede.thesis.game.equipment.Marker;
+import me.belakede.thesis.internal.game.util.Cards;
 import me.belakede.thesis.server.note.domain.Author;
 import me.belakede.thesis.server.note.domain.Note;
 import me.belakede.thesis.server.note.exception.MissingAuthorException;
+import me.belakede.thesis.server.note.request.NoteRequest;
+import me.belakede.thesis.server.note.response.NoteResponse;
+import me.belakede.thesis.server.note.response.NotesResponse;
 import me.belakede.thesis.server.note.service.AuthorService;
 import me.belakede.thesis.server.note.service.NoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotNull;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/notes")
@@ -33,21 +35,23 @@ public class NoteController {
     }
 
     @RequestMapping(value = "/join", method = RequestMethod.POST)
-    public Author join(Principal principal, @NotNull String room) {
-        return authorService.create(principal.getName(), room);
+    public void join(Principal principal, @RequestBody NoteRequest noteRequest) {
+        authorService.create(principal.getName(), noteRequest.getRoom());
     }
 
-    @RequestMapping(method = RequestMethod.GET)
-    public List<Note> findAll(Principal principal, @RequestParam @NotNull String room) throws MissingAuthorException {
+    @RequestMapping(value = "/{room}", method = RequestMethod.GET)
+    public NotesResponse findAll(Principal principal, @PathVariable("room") String room) throws MissingAuthorException {
         Author author = authorService.findByNameAndRoom(principal.getName(), room);
-        return noteService.findAllByAuthor(author);
+        List<Note> notes = noteService.findAllByAuthor(author);
+        Set<NoteResponse> noteResponses = notes.stream().map(n -> new NoteResponse(n.getCard(), n.getOwner(), n.getMarker())).collect(Collectors.toSet());
+        return new NotesResponse(noteResponses);
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public Note store(Principal principal, @RequestParam @NotNull String room, @RequestParam @NotNull Card card,
-                      @RequestParam @NotNull String owner, @RequestParam @NotNull Marker marker) throws MissingAuthorException {
-        Author author = authorService.findByNameAndRoom(principal.getName(), room);
-        return noteService.create(new Note(author, owner, card, marker));
+    public void store(Principal principal, @RequestBody NoteRequest noteRequest) throws MissingAuthorException {
+        Author author = authorService.findByNameAndRoom(principal.getName(), noteRequest.getRoom());
+        Optional<Card> card = Cards.valueOf(noteRequest.getCard());
+        noteService.create(new Note(author, noteRequest.getOwner(), card.orElse(null), noteRequest.getMarker()));
     }
 
 }
