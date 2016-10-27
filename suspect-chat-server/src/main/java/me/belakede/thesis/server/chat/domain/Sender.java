@@ -17,6 +17,7 @@ public class Sender {
     private String room;
 
     public Sender() {
+        // It's required for an entity
     }
 
     public Sender(String name, String room) {
