@@ -14,6 +14,7 @@
         <module>suspect-auth-server</module>
         <module>suspect-chat-server</module>
         <module>suspect-note-server</module>
+        <module>suspect-game-server</module>
     </modules>
 
     <properties>
