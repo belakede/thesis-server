@@ -1,8 +1,8 @@
 package me.belakede.thesis.server.note.domain;
 
-import me.belakede.junit.ExtendedEqualsHashCodeTestCase;
 import me.belakede.thesis.game.equipment.Marker;
 import me.belakede.thesis.game.equipment.Weapon;
+import me.belakede.thesis.junit.ExtendedEqualsHashCodeTestCase;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.RunWith;

@@ -84,9 +84,8 @@ public class UserControllerIntegrationTest {
         UsersResponse response = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE)
                 .header("Authorization", "Bearer " + accessToken.getValue())
                 .get(UsersResponse.class);
-        assertThat(response.getUsers().size(), greaterThan(0));
+        assertThat(response.getUsers().size(), is(1));
         assertThat(response.getUsers(), contains(new UserResponse(TEST_USER)));
-        assertThat(response.getUsers(), not(contains(new UserResponse(adminUsername))));
     }
 
     @Test
