@@ -50,7 +50,7 @@ public class NoteControllerIntegrationTest {
     @Before
     public void setUp() throws Exception {
         accessToken = authHelper.createOAuth2AccessToken(adminUsername, Role.ADMIN.getAuthority());
-        testAccessToken = authHelper.createOAuth2AccessToken("testuser", Role.ADMIN.getAuthority());
+        testAccessToken = authHelper.createOAuth2AccessToken("testuser", Role.USER.getAuthority());
         request = new NoteRequest("test-room", Suspect.GREEN, "demo", Marker.YES);
     }
 

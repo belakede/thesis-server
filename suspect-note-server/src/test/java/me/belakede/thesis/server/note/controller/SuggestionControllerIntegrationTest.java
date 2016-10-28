@@ -49,7 +49,7 @@ public class SuggestionControllerIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-        accessToken = authHelper.createOAuth2AccessToken(adminUsername, Role.ADMIN.getAuthority());
+        accessToken = authHelper.createOAuth2AccessToken("randomuser", Role.ADMIN.getAuthority());
     }
 
     @Test
