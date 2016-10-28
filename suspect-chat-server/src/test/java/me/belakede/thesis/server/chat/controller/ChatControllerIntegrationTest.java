@@ -2,6 +2,7 @@ package me.belakede.thesis.server.chat.controller;
 
 import me.belakede.junit.OrderedSpringRunner;
 import me.belakede.test.security.oauth2.OAuth2Helper;
+import me.belakede.thesis.jackson.JacksonContextResolver;
 import me.belakede.thesis.server.auth.domain.Role;
 import me.belakede.thesis.server.chat.request.ChatRequest;
 import me.belakede.thesis.server.chat.response.Message;
@@ -86,7 +87,7 @@ public class ChatControllerIntegrationTest {
 
         @Override
         public void run() {
-            Client client = ClientBuilder.newBuilder().register(SseFeature.class).build();
+            Client client = ClientBuilder.newBuilder().register(JacksonContextResolver.class, SseFeature.class).build();
             WebTarget webTarget = client.target("http://localhost:" + randomServerPort + "/chat/join");
             EventInput eventInput = webTarget.request().accept(MediaType.APPLICATION_JSON_TYPE)
                     .header("Authorization", "Bearer " + accessToken.getValue())
