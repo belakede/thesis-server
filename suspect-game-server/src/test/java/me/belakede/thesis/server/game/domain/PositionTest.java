@@ -14,7 +14,7 @@ public class PositionTest {
     public static final class PositionEqualsHashCodeTest extends ExtendedEqualsHashCodeTestCase {
 
         public PositionEqualsHashCodeTest(String name) {
-            super(name, Position.class, Arrays.asList("game", "name", "character", "alive"));
+            super(name, Position.class, Arrays.asList("player", "row", "column"));
         }
 
         @Override
