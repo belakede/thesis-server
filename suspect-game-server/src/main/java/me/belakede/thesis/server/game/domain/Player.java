@@ -22,6 +22,7 @@ public class Player implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
     private Suspect character;
+    @Column(nullable = false)
     private boolean alive;
 
     public Player() {
