@@ -10,8 +10,6 @@ import java.time.LocalDateTime;
 public class Game implements Serializable {
 
     private static final long serialVersionUID = 6620498616614285764L;
-    @OneToOne(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    Mystery mystery;
     @Id
     @GeneratedValue
     private Long id;
@@ -24,6 +22,8 @@ public class Game implements Serializable {
     private BoardType boardType;
     @Enumerated(EnumType.STRING)
     private GameStatus status;
+    @OneToOne(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Mystery mystery;
 
     public Game() {
     }
