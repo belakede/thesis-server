@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Table(uniqueConstraints = @UniqueConstraint(name = "PLAYER_UNIQUE_KEY", columnNames = {"game_id", "name"}))
 public class Player implements Serializable {
     private static final long serialVersionUID = -5448865337444775717L;
 
