@@ -24,6 +24,8 @@ public class Player implements Serializable {
     private Suspect suspect;
     @Column(nullable = false)
     private boolean alive;
+    @OneToOne(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Position position;
     @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<PlayerCard> playerCards;
 
@@ -68,6 +70,14 @@ public class Player implements Serializable {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public Set<PlayerCard> getPlayerCards() {
