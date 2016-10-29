@@ -33,7 +33,7 @@ public class GameTest {
         }
 
         @Override
-        protected Object createInstance() throws Exception {
+        protected Game createInstance() throws Exception {
             Game game = new Game();
             game.setBoardType(BoardType.DEFAULT);
             game.setCreated(TimeMachine.now());
@@ -43,7 +43,7 @@ public class GameTest {
         }
 
         @Override
-        protected Object createNotEqualInstance() throws Exception {
+        protected Game createNotEqualInstance() throws Exception {
             Game game = new Game();
             game.setBoardType(BoardType.ADVANCED);
             game.setCreated(TimeMachine.now());
