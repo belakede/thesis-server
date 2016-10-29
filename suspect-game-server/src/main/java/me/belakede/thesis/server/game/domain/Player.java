@@ -15,15 +15,14 @@ public class Player implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(nullable = false, updatable = false)
-    @JoinColumn
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(nullable = false, updatable = false)
     private Game game;
     @Column(nullable = false, updatable = false)
     private String name;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
-    private Suspect character;
+    private Suspect suspect;
     @Column(nullable = false)
     private boolean alive;
     @Column
@@ -58,12 +57,12 @@ public class Player implements Serializable {
         this.name = name;
     }
 
-    public Suspect getCharacter() {
-        return character;
+    public Suspect getSuspect() {
+        return suspect;
     }
 
-    public void setCharacter(Suspect character) {
-        this.character = character;
+    public void setSuspect(Suspect suspect) {
+        this.suspect = suspect;
     }
 
     public boolean isAlive() {
@@ -96,14 +95,14 @@ public class Player implements Serializable {
         return (alive == player.alive)
                 && (game != null ? game.equals(player.game) : player.game == null)
                 && (name != null ? name.equals(player.name) : player.name == null)
-                && (character == player.character);
+                && (suspect == player.suspect);
     }
 
     @Override
     public int hashCode() {
         int result = game != null ? game.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (character != null ? character.hashCode() : 0);
+        result = 31 * result + (suspect != null ? suspect.hashCode() : 0);
         result = 31 * result + (alive ? 1 : 0);
         return result;
     }

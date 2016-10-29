@@ -27,7 +27,7 @@ public class PlayerTest {
             Player player = new Player();
             player.setGame(game);
             player.setName("John");
-            player.setCharacter(Suspect.PLUM);
+            player.setSuspect(Suspect.PLUM);
             player.setAlive(true);
             return player;
         }
@@ -41,7 +41,7 @@ public class PlayerTest {
             Player player = new Player();
             player.setGame(game);
             player.setName("Jane");
-            player.setCharacter(Suspect.SCARLET);
+            player.setSuspect(Suspect.SCARLET);
             player.setAlive(false);
             return player;
         }
