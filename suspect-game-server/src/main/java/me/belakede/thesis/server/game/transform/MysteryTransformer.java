@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 public class MysteryTransformer {
 
     public Case transform(Mystery mystery) {
-
         DefaultSuspicion suspicion = new DefaultSuspicion(mystery.getSuspect(), mystery.getRoom(), mystery.getWeapon());
         return new DefaultCase(suspicion);
     }
