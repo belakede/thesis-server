@@ -1,10 +1,12 @@
 package me.belakede.thesis.server.game.domain;
 
+
 import me.belakede.thesis.game.board.BoardType;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 public class Game implements Serializable {
@@ -24,6 +26,8 @@ public class Game implements Serializable {
     private GameStatus status;
     @OneToOne(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Mystery mystery;
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<Player> players;
 
     public Game() {
     }
@@ -74,6 +78,14 @@ public class Game implements Serializable {
 
     public void setMystery(Mystery mystery) {
         this.mystery = mystery;
+    }
+
+    public Set<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Set<Player> players) {
+        this.players = players;
     }
 
     @Override
