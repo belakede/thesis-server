@@ -17,6 +17,7 @@ public class Player implements Serializable {
     @JoinColumn
     @ManyToOne(fetch = FetchType.EAGER)
     private Game game;
+    @Column(nullable = false, updatable = false)
     private String name;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, updatable = false)
