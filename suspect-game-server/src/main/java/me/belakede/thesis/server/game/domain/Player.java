@@ -1,6 +1,5 @@
 package me.belakede.thesis.server.game.domain;
 
-import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.game.equipment.Suspect;
 
 import javax.persistence.*;
@@ -25,10 +24,8 @@ public class Player implements Serializable {
     private Suspect suspect;
     @Column(nullable = false)
     private boolean alive;
-    @Column
-    @CollectionTable(joinColumns = @JoinColumn(name = "PLAYER_ID"))
-    @ElementCollection(targetClass = Card.class, fetch = FetchType.EAGER)
-    private Set<Card> cards;
+    @OneToMany(mappedBy = "player", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<PlayerCard> playerCards;
 
     public Player() {
     }
@@ -73,12 +70,12 @@ public class Player implements Serializable {
         this.alive = alive;
     }
 
-    public Set<Card> getCards() {
-        return cards;
+    public Set<PlayerCard> getPlayerCards() {
+        return playerCards;
     }
 
-    public void setCards(Set<Card> cards) {
-        this.cards = cards;
+    public void setPlayerCards(Set<PlayerCard> playerCards) {
+        this.playerCards = playerCards;
     }
 
     @Override
