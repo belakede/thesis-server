@@ -1,9 +1,11 @@
 package me.belakede.thesis.server.game.domain;
 
+import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.game.equipment.Suspect;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(name = "PLAYER_UNIQUE_KEY", columnNames = {"game_id", "name"}))
@@ -24,6 +26,10 @@ public class Player implements Serializable {
     private Suspect character;
     @Column(nullable = false)
     private boolean alive;
+    @Column
+    @CollectionTable(joinColumns = @JoinColumn(name = "PLAYER_ID"))
+    @ElementCollection(targetClass = Card.class, fetch = FetchType.EAGER)
+    private Set<Card> cards;
 
     public Player() {
     }
@@ -66,6 +72,14 @@ public class Player implements Serializable {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
+    }
+
+    public Set<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(Set<Card> cards) {
+        this.cards = cards;
     }
 
     @Override
