@@ -45,13 +45,17 @@ public class PlayerCard implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         PlayerCard that = (PlayerCard) o;
 
-        if (player != null ? !player.equals(that.player) : that.player != null) return false;
-        return card != null ? card.equals(that.card) : that.card == null;
+        return (player != null ? player.equals(that.player) : that.player == null)
+                && (card != null ? card.equals(that.card) : that.card == null);
 
     }
 
