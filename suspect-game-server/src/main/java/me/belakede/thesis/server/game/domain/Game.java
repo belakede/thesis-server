@@ -10,7 +10,8 @@ import java.time.LocalDateTime;
 public class Game implements Serializable {
 
     private static final long serialVersionUID = 6620498616614285764L;
-
+    @OneToOne(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    Mystery mystery;
     @Id
     @GeneratedValue
     private Long id;
@@ -67,6 +68,14 @@ public class Game implements Serializable {
         this.status = status;
     }
 
+    public Mystery getMystery() {
+        return mystery;
+    }
+
+    public void setMystery(Mystery mystery) {
+        this.mystery = mystery;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -92,14 +101,4 @@ public class Game implements Serializable {
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "Game{" +
-                "id=" + id +
-                ", roomId='" + roomId + '\'' +
-                ", created=" + created +
-                ", boardType=" + boardType +
-                ", status=" + status +
-                '}';
-    }
 }
