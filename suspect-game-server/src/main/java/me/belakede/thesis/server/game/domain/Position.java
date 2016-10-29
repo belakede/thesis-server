@@ -12,9 +12,9 @@ public class Position implements Serializable {
     private Long id;
     @OneToOne(orphanRemoval = true)
     private Player player;
-    @Column(nullable = false)
+    @Column(name = "row_index", nullable = false)
     private Integer row;
-    @Column(nullable = false)
+    @Column(name = "column_index", nullable = false)
     private Integer column;
 
     public Position() {
