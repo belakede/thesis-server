@@ -41,7 +41,7 @@ public class MysteryTest {
             game.setStatus(GameStatus.FINISHED);
             game.setBoardType(BoardType.ADVANCED);
             Mystery mystery = new Mystery();
-            mystery.setGame(new Game());
+            mystery.setGame(game);
             mystery.setSuspect(Suspect.PEACOCK);
             mystery.setRoom(Room.HALL);
             mystery.setWeapon(Weapon.ROPE);
