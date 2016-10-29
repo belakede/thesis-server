@@ -15,7 +15,7 @@ public class PlayerTest {
     public static final class PlayerEqualsHashCodeTest extends ExtendedEqualsHashCodeTestCase {
 
         public PlayerEqualsHashCodeTest(String name) {
-            super(name, Player.class, Arrays.asList("game", "name", "character", "alive"));
+            super(name, Player.class, Arrays.asList("game", "name", "suspect", "alive"));
         }
 
         @Override
