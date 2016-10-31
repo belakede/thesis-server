@@ -6,7 +6,7 @@ import me.belakede.thesis.game.board.BoardType;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 public class Game implements Serializable {
@@ -27,7 +27,7 @@ public class Game implements Serializable {
     @OneToOne(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Mystery mystery;
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private Set<Player> players;
+    private List<Player> players;
 
     public Game() {
     }
@@ -80,11 +80,11 @@ public class Game implements Serializable {
         this.mystery = mystery;
     }
 
-    public Set<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(Set<Player> players) {
+    public void setPlayers(List<Player> players) {
         this.players = players;
     }
 
