@@ -5,6 +5,7 @@ import me.belakede.thesis.game.board.BoardType;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -28,6 +29,9 @@ public class Game implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    @OneToMany(mappedBy = "game", orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Player> players;
 
     public Game() {
         // It's required for an entity
@@ -85,6 +89,14 @@ public class Game implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
     }
 
     @Override
