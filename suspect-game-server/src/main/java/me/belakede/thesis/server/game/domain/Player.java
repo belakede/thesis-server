@@ -97,7 +97,7 @@ public class Player implements Serializable {
         this.figurine = figurine;
     }
 
-    public Boolean getAlive() {
+    public Boolean isAlive() {
         return alive;
     }
 
@@ -113,7 +113,7 @@ public class Player implements Serializable {
         this.ordinalNumber = ordinalNumber;
     }
 
-    public Boolean getCurrent() {
+    public Boolean isCurrent() {
         return current;
     }
 
