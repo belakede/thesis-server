@@ -7,6 +7,7 @@ import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Position;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @Component
 public class PositionConverter {
 
-    public Map<Figurine, Coordinate> convert(Set<Position> positions) {
+    public Map<Figurine, Coordinate> convert(Collection<Position> positions) {
         Map<Figurine, Coordinate> coordinates = new HashMap<>(positions.size());
         positions.forEach(p -> coordinates.put(Figurines.valueOf(p.getFigurine()).get(), convert(p)));
         return coordinates;
