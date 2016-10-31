@@ -36,6 +36,9 @@ public class Game implements Serializable {
     @OneToMany(mappedBy = "game", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Player> players;
 
+    @OneToMany(mappedBy = "game", orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<Position> positions;
+
     public Game() {
         // It's required for an entity
     }
@@ -108,6 +111,14 @@ public class Game implements Serializable {
 
     public void setPlayers(List<Player> players) {
         this.players = players;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
+    }
+
+    public void setPositions(List<Position> positions) {
+        this.positions = positions;
     }
 
     @Override
