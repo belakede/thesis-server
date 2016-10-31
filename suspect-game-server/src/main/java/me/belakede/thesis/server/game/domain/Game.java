@@ -30,6 +30,9 @@ public class Game implements Serializable {
     @Column(nullable = false)
     private Status status;
 
+    @OneToOne(mappedBy = "game", orphanRemoval = true)
+    private Mystery mystery;
+
     @OneToMany(mappedBy = "game", orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Player> players;
 
@@ -89,6 +92,14 @@ public class Game implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Mystery getMystery() {
+        return mystery;
+    }
+
+    public void setMystery(Mystery mystery) {
+        this.mystery = mystery;
     }
 
     public List<Player> getPlayers() {
