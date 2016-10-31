@@ -4,6 +4,7 @@ import me.belakede.thesis.game.equipment.Suspect;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -40,6 +41,11 @@ public class Player implements Serializable {
 
     public Player() {
         // It's required for an entity
+    }
+
+    public Player(Suspect figurine, Set<PlayerCard> cards) {
+        this.figurine = figurine;
+        this.cards = new HashSet<>(cards);
     }
 
     public Player(String username, Suspect figurine, Integer ordinalNumber) {
