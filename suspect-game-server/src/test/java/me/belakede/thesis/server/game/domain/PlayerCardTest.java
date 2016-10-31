@@ -18,7 +18,7 @@ public class PlayerCardTest {
     public static final class PlayerCardEqualsHashCodeTest extends ExtendedEqualsHashCodeTestCase {
 
         public PlayerCardEqualsHashCodeTest(String name) {
-            super(name, Player.class, Arrays.asList("player", "card"));
+            super(name, PlayerCard.class, Arrays.asList("player", "card"));
         }
 
         @Override
