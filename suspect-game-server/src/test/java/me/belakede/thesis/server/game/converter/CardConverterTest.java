@@ -33,10 +33,8 @@ public class CardConverterTest {
 
     @Test
     public void testConvertShouldReturnAPlayerCardForTheSpecifiedPlayerFromACard() throws Exception {
-        Player player = Mockito.mock(Player.class);
-        PlayerCard actual = testSubject.convert(player, Weapon.ROPE);
+        PlayerCard actual = testSubject.convert(Weapon.ROPE);
         assertThat(actual, notNullValue());
         assertThat(actual.getCard(), is(Weapon.ROPE.name()));
-        assertThat(actual.getPlayer(), is(player));
     }
 }
