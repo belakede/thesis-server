@@ -15,10 +15,15 @@ public class PlayerCard implements Serializable {
     @JoinColumn(nullable = false, updatable = false)
     private Player player;
 
+    @Column(nullable = false, updatable = false)
     private String card;
 
     public PlayerCard() {
         // It's required for an entity
+    }
+
+    public PlayerCard(String card) {
+        this.card = card;
     }
 
     public PlayerCard(Player player, String card) {
