@@ -4,6 +4,7 @@ import me.belakede.thesis.game.equipment.Suspect;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(name = "PLAYER_UNIQUE_KEY", columnNames = {"game_id", "username"}))
@@ -33,6 +34,9 @@ public class Player implements Serializable {
 
     @Column(nullable = false)
     private Boolean current;
+
+    @OneToMany(mappedBy = "player", orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<PlayerCard> cards;
 
     public Player() {
         // It's required for an entity
@@ -109,6 +113,14 @@ public class Player implements Serializable {
 
     public void setCurrent(Boolean current) {
         this.current = current;
+    }
+
+    public Set<PlayerCard> getCards() {
+        return cards;
+    }
+
+    public void setCards(Set<PlayerCard> cards) {
+        this.cards = cards;
     }
 
     @Override
