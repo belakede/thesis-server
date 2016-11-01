@@ -24,13 +24,15 @@ public class PlayerConverter {
     public me.belakede.thesis.game.Player convert(Player player) {
         Suspect figurine = player.getFigurine();
         Set<Card> cards = player.getCards().stream().map(cardConverter::convert).collect(Collectors.toSet());
-        return new DefaultPlayer(figurine, cards);
+        Boolean alive = player.isAlive();
+        return new DefaultPlayer(figurine, cards, alive);
     }
 
     public Player convert(me.belakede.thesis.game.Player player) {
         Suspect figurine = player.getFigurine();
         Set<PlayerCard> cards = player.getCards().stream().map(cardConverter::convert).collect(Collectors.toSet());
         Player result = new Player(figurine, cards);
+        result.setAlive(!player.hasBeenMadeGroundlessAccusation());
         result.getCards().forEach(c -> c.setPlayer(result));
         return result;
     }
