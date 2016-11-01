@@ -1,8 +1,10 @@
 package me.belakede.thesis.server.game.converter;
 
+import me.belakede.thesis.game.board.Field;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.game.equipment.Suspect;
 import me.belakede.thesis.game.equipment.Weapon;
+import me.belakede.thesis.internal.game.board.FieldFactory;
 import me.belakede.thesis.internal.game.util.Coordinate;
 import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Position;
@@ -29,13 +31,14 @@ public class PositionConverterTest {
     }
 
     @Test
-    public void testConvertShouldProduceAPositionSetFromAFigurineCoordinateMap() throws Exception {
+    public void testConvertShouldProduceAPositionSetFromAFigurineFieldMap() {
         Game game = mock(Game.class);
-        Map<Figurine, Coordinate> coordinates = new HashMap<>();
-        coordinates.put(Suspect.WHITE, new Coordinate(10, 13));
-        coordinates.put(Weapon.REVOLVER, new Coordinate(4, 4));
+        Map<Figurine, Field> coordinates = new HashMap<>();
+        coordinates.put(Suspect.WHITE, FieldFactory.getFieldBySymbol(10, 13, 'S'));
+        coordinates.put(Weapon.REVOLVER, FieldFactory.getFieldBySymbol(4, 4, 'R'));
 
-        Set<Position> actual = testSubject.convert(game, coordinates);
+        Set<Position> actual = testSubject.convert(coordinates);
+        actual.forEach(p -> p.setGame(game));
 
         assertThat(actual.size(), is(2));
         assertThat(actual, containsInAnyOrder(new Position(Suspect.WHITE.name(), game, 10, 13),
