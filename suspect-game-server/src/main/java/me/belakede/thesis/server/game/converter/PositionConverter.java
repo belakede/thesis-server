@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,10 +22,10 @@ public class PositionConverter {
         return coordinates;
     }
 
-    public Set<Position> convert(Map<Figurine, Field> fields) {
+    public List<Position> convert(Map<Figurine, Field> fields) {
         return fields.entrySet().stream()
                 .map(e -> new Position(e.getKey().name(), e.getValue().getRow(), e.getValue().getColumn()))
-                .collect(Collectors.toSet());
+                .collect(Collectors.toList());
     }
 
     private Coordinate convert(Position position) {

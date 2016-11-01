@@ -11,10 +11,7 @@ import me.belakede.thesis.server.game.domain.Position;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -37,7 +34,7 @@ public class PositionConverterTest {
         coordinates.put(Suspect.WHITE, FieldFactory.getFieldBySymbol(10, 13, 'S'));
         coordinates.put(Weapon.REVOLVER, FieldFactory.getFieldBySymbol(4, 4, 'R'));
 
-        Set<Position> actual = testSubject.convert(coordinates);
+        List<Position> actual = testSubject.convert(coordinates);
         actual.forEach(p -> p.setGame(game));
 
         assertThat(actual.size(), is(2));
