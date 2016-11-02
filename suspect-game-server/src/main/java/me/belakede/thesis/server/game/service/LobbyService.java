@@ -11,13 +11,13 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class GameService {
+public class LobbyService {
 
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository, PlayerRepository playerRepository) {
+    public LobbyService(GameRepository gameRepository, PlayerRepository playerRepository) {
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
     }
