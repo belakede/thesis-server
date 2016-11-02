@@ -43,8 +43,7 @@ public class LobbyService {
         for (int i = 0; i < game.getPlayers().size(); i++) {
             game.getPlayers().get(i).setUsername(users.get(i).getUsername());
         }
-        gameRepository.saveAndFlush(game);
-        return game;
+        return gameRepository.saveAndFlush(game);
     }
 
     public void remove(Long id) {
