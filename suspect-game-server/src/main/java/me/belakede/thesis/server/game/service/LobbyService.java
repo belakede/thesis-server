@@ -1,31 +1,50 @@
 package me.belakede.thesis.server.game.service;
 
 import me.belakede.thesis.game.equipment.BoardType;
+import me.belakede.thesis.internal.game.util.GameBuilder;
+import me.belakede.thesis.server.auth.domain.User;
+import me.belakede.thesis.server.auth.exception.MissingUserException;
+import me.belakede.thesis.server.auth.service.UserService;
+import me.belakede.thesis.server.game.converter.GameConverter;
 import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.repository.GameRepository;
-import me.belakede.thesis.server.game.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class LobbyService {
 
     private final GameRepository gameRepository;
-    private final PlayerRepository playerRepository;
+    private final GameConverter gameConverter;
+    private final UserService userService;
 
     @Autowired
-    public LobbyService(GameRepository gameRepository, PlayerRepository playerRepository) {
+    public LobbyService(GameRepository gameRepository, GameConverter gameConverter, UserService userService) {
         this.gameRepository = gameRepository;
-        this.playerRepository = playerRepository;
+        this.gameConverter = gameConverter;
+        this.userService = userService;
     }
 
-    public Game create(BoardType boardType, Collection<String> users) {
-        new Game(boardType, Game.Status.CREATED);
-        // TODO add option to get users by name from the auth server
-        return null;
+    /**
+     * @param boardType
+     * @param usernames
+     * @return
+     * @throws MissingUserException
+     */
+    public Game create(BoardType boardType, Collection<String> usernames) throws IOException {
+        List<User> users = usernames.stream().map(u -> userService.findByUsername(u)).collect(Collectors.toList());
+        me.belakede.thesis.game.Game gameLogic = GameBuilder.create().boardType(boardType).mystery().players(users.size()).positions().build();
+        Game game = gameConverter.convert(gameLogic);
+        for (int i = 0; i < game.getPlayers().size(); i++) {
+            game.getPlayers().get(i).setUsername(users.get(i).getUsername());
+        }
+        gameRepository.saveAndFlush(game);
+        return game;
     }
 
     public void remove(Long id) {
