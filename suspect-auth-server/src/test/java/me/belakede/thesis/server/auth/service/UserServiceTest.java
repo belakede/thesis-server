@@ -73,6 +73,19 @@ public class UserServiceTest {
     }
 
     @Test
+    public void findByUsernameShouldReturnWithTheSpecifiedUserFromTheDatasource() throws Exception {
+        User expectedUser = new User("user", passwordEncoder.encode("password"), true, new HashSet<>(Collections.singletonList(Role.USER)));
+        entityManager.persist(expectedUser);
+        User storedUser = userService.findByUsername("user");
+        assertThat(storedUser, is(expectedUser));
+    }
+
+    @Test(expected = MissingUserException.class)
+    public void findByUsernameShouldThrowExceptionWhenUserNotExists() throws Exception {
+        userService.findByUsername("user");
+    }
+
+    @Test
     public void removeShouldRemoveTheSpecifiedUserFromTheDatasource() throws Exception {
         User expectedUser = new User("user", passwordEncoder.encode("password"), true, new HashSet<>(Collections.singletonList(Role.USER)));
         entityManager.persist(expectedUser);

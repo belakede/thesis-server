@@ -24,6 +24,14 @@ public class UserService {
         this.encoder = encoder;
     }
 
+    public User findByUsername(String username) throws MissingUserException {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new MissingUserException("User not found: " + username);
+        }
+        return user;
+    }
+
     public List<User> findByRole(Role role) {
         return userRepository.findByRolesContains(role);
     }
@@ -38,10 +46,7 @@ public class UserService {
     }
 
     public User remove(String username) throws MissingUserException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new MissingUserException("User not found: " + username);
-        }
+        User user = findByUsername(username);
         userRepository.delete(user);
         return user;
     }
