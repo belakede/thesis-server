@@ -7,6 +7,7 @@ import me.belakede.thesis.server.auth.exception.MissingUserException;
 import me.belakede.thesis.server.auth.service.UserService;
 import me.belakede.thesis.server.game.converter.GameConverter;
 import me.belakede.thesis.server.game.domain.Game;
+import me.belakede.thesis.server.game.exception.MissingBoardException;
 import me.belakede.thesis.server.game.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,15 +36,20 @@ public class LobbyService {
      * @param usernames
      * @return
      * @throws MissingUserException
+     * @throws MissingBoardException
      */
-    public Game create(BoardType boardType, Collection<String> usernames) throws IOException {
-        List<User> users = usernames.stream().map(u -> userService.findByUsername(u)).collect(Collectors.toList());
-        me.belakede.thesis.game.Game gameLogic = GameBuilder.create().boardType(boardType).mystery().players(users.size()).positions().build();
-        Game game = gameConverter.convert(gameLogic);
-        for (int i = 0; i < game.getPlayers().size(); i++) {
-            game.getPlayers().get(i).setUsername(users.get(i).getUsername());
+    public Game create(BoardType boardType, Collection<String> usernames) {
+        try {
+            List<User> users = usernames.stream().map(u -> userService.findByUsername(u)).collect(Collectors.toList());
+            me.belakede.thesis.game.Game gameLogic = GameBuilder.create().boardType(boardType).mystery().players(users.size()).positions().build();
+            Game game = gameConverter.convert(gameLogic);
+            for (int i = 0; i < game.getPlayers().size(); i++) {
+                game.getPlayers().get(i).setUsername(users.get(i).getUsername());
+            }
+            return gameRepository.saveAndFlush(game);
+        } catch (IOException e) {
+            throw new MissingBoardException("Board not found: " + boardType);
         }
-        return gameRepository.saveAndFlush(game);
     }
 
     public void remove(Long id) {
