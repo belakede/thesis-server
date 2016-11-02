@@ -66,8 +66,11 @@ public class GameConverter {
 
         Game result = new Game(boardType, gameEnded ? Game.Status.FINISHED : Game.Status.CREATED);
         result.setMystery(mystery);
+        mystery.setGame(result);
         result.setPlayers(players);
+        players.forEach(p -> p.setGame(result));
         result.setPositions(positions);
+        positions.forEach(p -> p.setGame(result));
         return result;
     }
 
