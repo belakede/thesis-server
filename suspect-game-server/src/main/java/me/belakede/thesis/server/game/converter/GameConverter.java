@@ -1,7 +1,7 @@
 package me.belakede.thesis.server.game.converter;
 
 import me.belakede.thesis.game.Player;
-import me.belakede.thesis.game.board.BoardType;
+import me.belakede.thesis.game.equipment.BoardType;
 import me.belakede.thesis.game.equipment.Case;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.internal.game.util.Coordinate;
