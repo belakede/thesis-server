@@ -38,9 +38,14 @@ public class UserController {
         return new UserResponse(user.getUsername());
     }
 
+    /**
+     * @param username
+     * @return
+     * @throws MissingUserException
+     */
     @PreAuthorize("hasAuthority('ADMIN')")
     @RequestMapping(value = "/users/{username}", method = RequestMethod.DELETE)
-    public UserResponse removeUser(@PathVariable("username") String username) throws MissingUserException {
+    public UserResponse removeUser(@PathVariable("username") String username) {
         User user = service.remove(username);
         return new UserResponse(user.getUsername());
     }
