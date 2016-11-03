@@ -21,7 +21,7 @@ public class PlayerConverterTest {
 
     @Before
     public void setUp() throws Exception {
-        testSubject = new PlayerConverter(new CardConverter());
+        testSubject = new PlayerConverter();
     }
 
     @Test
