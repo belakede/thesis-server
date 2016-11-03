@@ -9,15 +9,21 @@ import org.springframework.stereotype.Service;
 public class GameService {
 
     private final GameRepository gameRepository;
+    private final NotificationService notificationService;
     private Game game;
 
     @Autowired
-    public GameService(GameRepository gameRepository) {
+    public GameService(GameRepository gameRepository, NotificationService notificationService) {
         this.gameRepository = gameRepository;
+        this.notificationService = notificationService;
     }
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public boolean gameInProgress() {
+        return game != null;
     }
 
 }
