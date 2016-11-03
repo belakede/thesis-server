@@ -1,11 +1,15 @@
 package me.belakede.thesis.server.game.converter;
 
+import me.belakede.thesis.game.board.Field;
+import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.server.game.domain.Position;
 import me.belakede.thesis.server.game.response.Coordinate;
 import me.belakede.thesis.server.game.response.FigurineNotification;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
@@ -17,6 +21,12 @@ public class PositionConverter {
 
     public Collection<FigurineNotification> convert(Collection<Position> positions) {
         return positions.stream().map(this::convert).collect(Collectors.toList());
+    }
+
+    public List<Position> convert(Map<Figurine, Field> fields) {
+        return fields.entrySet().stream()
+                .map(e -> new Position(e.getKey().name(), e.getValue().getRow(), e.getValue().getColumn()))
+                .collect(Collectors.toList());
     }
 
 }

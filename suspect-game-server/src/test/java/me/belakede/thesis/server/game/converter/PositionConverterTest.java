@@ -1,20 +1,23 @@
 package me.belakede.thesis.server.game.converter;
 
+import me.belakede.thesis.game.board.Field;
+import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.game.equipment.Suspect;
 import me.belakede.thesis.game.equipment.Weapon;
+import me.belakede.thesis.internal.game.board.FieldFactory;
+import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Position;
 import me.belakede.thesis.server.game.response.Coordinate;
 import me.belakede.thesis.server.game.response.FigurineNotification;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class PositionConverterTest {
 
@@ -51,6 +54,21 @@ public class PositionConverterTest {
                 new FigurineNotification(Suspect.MUSTARD, new Coordinate(26, 3)),
                 new FigurineNotification(Weapon.CANDLESTICK, new Coordinate(4, 16))
         ));
+    }
+
+    @Test
+    public void testConvertShouldProduceAPositionSetFromAFigurineFieldMap() {
+        Game game = mock(Game.class);
+        Map<Figurine, Field> coordinates = new HashMap<>();
+        coordinates.put(Suspect.WHITE, FieldFactory.getFieldBySymbol(10, 13, 'S'));
+        coordinates.put(Weapon.REVOLVER, FieldFactory.getFieldBySymbol(4, 4, 'R'));
+
+        List<Position> actual = testSubject.convert(coordinates);
+        actual.forEach(p -> p.setGame(game));
+
+        assertThat(actual.size(), is(2));
+        assertThat(actual, containsInAnyOrder(new Position(Suspect.WHITE.name(), game, 10, 13),
+                new Position(Weapon.REVOLVER.name(), game, 4, 4)));
     }
 
 }
