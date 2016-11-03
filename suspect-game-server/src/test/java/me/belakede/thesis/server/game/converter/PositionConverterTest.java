@@ -71,4 +71,18 @@ public class PositionConverterTest {
                 new Position(Weapon.REVOLVER.name(), game, 4, 4)));
     }
 
+    @Test
+    public void testConvertShouldProduceAFigurineCoordinateMapFromAPositionSet() throws Exception {
+        Game game = mock(Game.class);
+        Set<Position> positions = new HashSet<>();
+        positions.add(new Position(Suspect.GREEN.name(), game, 10, 12));
+        positions.add(new Position(Weapon.LEAD_PIPE.name(), game, 24, 22));
+
+        Map<Figurine, me.belakede.thesis.internal.game.util.Coordinate> actual = testSubject.convertToMap(positions);
+
+        assertThat(actual.size(), is(2));
+        assertThat(actual.get(Suspect.GREEN), is(new me.belakede.thesis.internal.game.util.Coordinate(10, 12)));
+        assertThat(actual.get(Weapon.LEAD_PIPE), is(new me.belakede.thesis.internal.game.util.Coordinate(24, 22)));
+    }
+
 }
