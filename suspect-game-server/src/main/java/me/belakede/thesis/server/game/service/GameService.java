@@ -4,6 +4,7 @@ import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Service
 public class GameService {
@@ -25,5 +26,10 @@ public class GameService {
     public boolean gameInProgress() {
         return game != null;
     }
+
+    public SseEmitter createEmitter(String username) {
+        return notificationService.createEmitter(username);
+    }
+
 
 }
