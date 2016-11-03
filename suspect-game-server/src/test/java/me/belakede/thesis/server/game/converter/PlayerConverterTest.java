@@ -7,6 +7,7 @@ import me.belakede.thesis.game.equipment.Weapon;
 import me.belakede.thesis.internal.game.DefaultPlayer;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.domain.PlayerCard;
+import me.belakede.thesis.server.game.response.PlayerStatusNotification;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,7 +44,7 @@ public class PlayerConverterTest {
     }
 
     @Test
-    public void testConvertShouldCreateAPlayerFromPlayerEntity() {
+    public void testConvertShouldCreateAPlayerNotificationFromPlayerEntity() {
         Set<PlayerCard> cards = new HashSet<>();
         cards.add(new PlayerCard(Suspect.PLUM.name()));
         cards.add(new PlayerCard(Room.HALL.name()));
@@ -51,11 +52,11 @@ public class PlayerConverterTest {
         Player player = new Player(Suspect.MUSTARD, cards);
         player.getCards().forEach(c -> c.setPlayer(player));
 
-        me.belakede.thesis.game.Player actual = testSubject.convert(player);
+        PlayerStatusNotification actual = testSubject.convert(player);
 
         assertThat(actual, notNullValue());
         assertThat(actual.getFigurine(), is(Suspect.MUSTARD));
-        assertThat(actual.getCards(), containsInAnyOrder(Suspect.PLUM, Room.HALL, Weapon.WRENCH));
+        assertThat(actual.getCards(), containsInAnyOrder(Suspect.PLUM.name(), Room.HALL.name(), Weapon.WRENCH.name()));
 
     }
 }
