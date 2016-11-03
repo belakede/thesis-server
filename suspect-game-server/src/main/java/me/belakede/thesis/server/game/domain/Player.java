@@ -46,6 +46,8 @@ public class Player implements Serializable {
     public Player(Suspect figurine, Set<PlayerCard> cards) {
         this.figurine = figurine;
         this.cards = new HashSet<>(cards);
+        this.alive = true;
+        this.current = false;
     }
 
     public Player(String username, Suspect figurine, Integer ordinalNumber) {
