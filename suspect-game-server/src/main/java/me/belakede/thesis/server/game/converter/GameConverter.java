@@ -2,21 +2,17 @@ package me.belakede.thesis.server.game.converter;
 
 import me.belakede.thesis.game.Player;
 import me.belakede.thesis.game.equipment.BoardType;
-import me.belakede.thesis.game.equipment.Case;
-import me.belakede.thesis.game.equipment.Figurine;
-import me.belakede.thesis.internal.game.util.Coordinate;
-import me.belakede.thesis.internal.game.util.GameRebuilder;
+import me.belakede.thesis.game.equipment.Suspect;
 import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Mystery;
 import me.belakede.thesis.server.game.domain.Position;
+import me.belakede.thesis.server.game.response.BoardStatus;
+import me.belakede.thesis.server.game.response.FigurineNotification;
+import me.belakede.thesis.server.game.response.GameStatusNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -31,21 +27,6 @@ public class GameConverter {
         this.playerConverter = playerConverter;
         this.mysteryConverter = mysteryConverter;
         this.positionConverter = positionConverter;
-    }
-
-    public me.belakede.thesis.game.Game convert(Game game) throws IOException {
-        BoardType boardType = game.getBoardType();
-        Case mystery = mysteryConverter.convert(game.getMystery());
-        List<Player> players = game.getPlayers().stream().map(playerConverter::convert).collect(Collectors.toList());
-        Optional<Player> currentPlayer = game.getPlayers().stream().filter(p -> p.isCurrent()).map(playerConverter::convert).findFirst();
-        Map<Figurine, Coordinate> positions = positionConverter.convert(game.getPositions());
-
-        return GameRebuilder.create()
-                .boardType(boardType)
-                .mystery(mystery)
-                .players(players, currentPlayer.orElse(players.get(0)))
-                .positions(positions)
-                .build();
     }
 
     public Game convert(me.belakede.thesis.game.Game game) {
@@ -72,6 +53,16 @@ public class GameConverter {
         result.setPositions(positions);
         positions.forEach(p -> p.setGame(result));
         return result;
+    }
+
+    public GameStatusNotification convert(Game game, Collection<me.belakede.thesis.server.game.domain.Player> players) {
+        List<FigurineNotification> positions = game.getPositions().stream()
+                .map(p -> new FigurineNotification(p.getFigurine(), new me.belakede.thesis.server.game.response.Coordinate(p.getRowIndex(), p.getColumnIndex())))
+                .collect(Collectors.toList());
+        BoardStatus boardStatus = new BoardStatus(game.getBoardType(), positions);
+        Map<Suspect, String> suspectUsernameMap = new HashMap<>();
+        players.forEach(p -> suspectUsernameMap.put(p.getFigurine(), p.getUsername()));
+        return new GameStatusNotification(boardStatus, suspectUsernameMap);
     }
 
 }
