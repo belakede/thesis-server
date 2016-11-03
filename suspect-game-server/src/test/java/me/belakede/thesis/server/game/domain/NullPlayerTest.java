@@ -16,7 +16,7 @@ public class NullPlayerTest {
     @Test
     public void testNullPlayerIdIsZero() {
         NullPlayer actual = new NullPlayer();
-        assertThat(actual.getId(), is(0));
+        assertThat(actual.getId(), is(0L));
     }
 
     @Test
