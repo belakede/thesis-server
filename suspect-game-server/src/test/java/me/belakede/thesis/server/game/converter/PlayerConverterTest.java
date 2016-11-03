@@ -57,6 +57,22 @@ public class PlayerConverterTest {
         assertThat(actual, notNullValue());
         assertThat(actual.getFigurine(), is(Suspect.MUSTARD));
         assertThat(actual.getCards(), containsInAnyOrder(Suspect.PLUM.name(), Room.HALL.name(), Weapon.WRENCH.name()));
+    }
 
+
+    @Test
+    public void testConvertShouldCreateAPlayerFromPlayerEntity() {
+        Set<PlayerCard> cards = new HashSet<>();
+        cards.add(new PlayerCard(Suspect.PLUM.name()));
+        cards.add(new PlayerCard(Room.HALL.name()));
+        cards.add(new PlayerCard(Weapon.WRENCH.name()));
+        Player player = new Player(Suspect.MUSTARD, cards);
+        player.getCards().forEach(c -> c.setPlayer(player));
+
+        me.belakede.thesis.game.Player actual = testSubject.convertToPlayer(player);
+
+        assertThat(actual, notNullValue());
+        assertThat(actual.getFigurine(), is(Suspect.MUSTARD));
+        assertThat(actual.getCards(), containsInAnyOrder(Suspect.PLUM, Room.HALL, Weapon.WRENCH));
     }
 }

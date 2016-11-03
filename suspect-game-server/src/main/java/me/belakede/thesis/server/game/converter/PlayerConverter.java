@@ -1,6 +1,8 @@
 package me.belakede.thesis.server.game.converter;
 
+import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.game.equipment.Suspect;
+import me.belakede.thesis.internal.game.DefaultPlayer;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.domain.PlayerCard;
 import me.belakede.thesis.server.game.response.PlayerStatusNotification;
@@ -35,5 +37,13 @@ public class PlayerConverter {
         result.getCards().forEach(c -> c.setPlayer(result));
         return result;
     }
+
+    public me.belakede.thesis.game.Player convertToPlayer(Player player) {
+        Suspect figurine = player.getFigurine();
+        Set<Card> cards = player.getCards().stream().map(cardConverter::convert).collect(Collectors.toSet());
+        Boolean alive = player.isAlive();
+        return new DefaultPlayer(figurine, cards, alive);
+    }
+
 
 }
