@@ -3,6 +3,7 @@ package me.belakede.thesis.server.game.service;
 import me.belakede.thesis.server.game.response.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class NotificationService {
@@ -20,7 +22,7 @@ public class NotificationService {
     private final Map<String, SseEmitter> emitters;
 
     public NotificationService() {
-        emitters = new HashMap<>();
+        emitters = new ConcurrentHashMap<>();
     }
 
     public SseEmitter createEmitter(String username) {
@@ -54,7 +56,7 @@ public class NotificationService {
         boolean sent = false;
         if (emitters.containsKey(user)) {
             try {
-                emitters.get(user).send(notification);
+                emitters.get(user).send(notification, MediaType.APPLICATION_JSON);
                 sent = true;
             } catch (IOException exception) {
                 emitters.get(user).complete();
