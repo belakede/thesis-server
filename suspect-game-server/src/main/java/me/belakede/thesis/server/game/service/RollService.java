@@ -22,16 +22,16 @@ public class RollService {
         hookupChangeListeners();
     }
 
+    public void update() {
+        pairOfDiceObjectProperty.setValue(gameLogicService.getGameLogic().roll());
+    }
+
     private void hookupChangeListeners() {
         pairOfDiceObjectProperty.addListener((observable, oldValue, newValue) -> {
             if (null != newValue) {
                 notificationService.broadcast(new PairOfDiceNotification(newValue.getFirst(), newValue.getSecond()));
             }
         });
-    }
-
-    public void update() {
-        pairOfDiceObjectProperty.setValue(gameLogicService.getGameLogic().roll());
     }
 
 }
