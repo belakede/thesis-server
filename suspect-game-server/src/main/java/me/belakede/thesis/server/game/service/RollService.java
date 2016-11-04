@@ -22,7 +22,7 @@ public class RollService {
         hookupChangeListeners();
     }
 
-    public void update() {
+    public void roll() {
         pairOfDiceObjectProperty.setValue(gameLogicService.getGameLogic().roll());
     }
 
