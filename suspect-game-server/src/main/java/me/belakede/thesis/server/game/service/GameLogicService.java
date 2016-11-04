@@ -1,6 +1,7 @@
 package me.belakede.thesis.server.game.service;
 
 import me.belakede.thesis.server.game.converter.GameConverter;
+import me.belakede.thesis.server.game.domain.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,10 @@ public class GameLogicService {
 
     public me.belakede.thesis.game.Game getGameLogic() {
         return gameLogic;
+    }
+
+    public Game getGameEntity() {
+        return gameEntity;
     }
 
     public void setGame(me.belakede.thesis.server.game.domain.Game game) {
