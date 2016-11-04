@@ -35,11 +35,11 @@ public class JoinService {
         hookupChangeListeners();
     }
 
-    public void add(String username) {
+    public void join(String username) {
         players.put(username, nullPlayer);
     }
 
-    public void remove(String username) {
+    public void exit(String username) {
         players.remove(username);
     }
 
