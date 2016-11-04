@@ -32,7 +32,7 @@ public class NextService {
         hookupChangeListeners();
     }
 
-    public void update() {
+    public void next() {
         updatePlayers();
         setupNextPlayer();
         updateLogic();
