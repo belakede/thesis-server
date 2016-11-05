@@ -38,6 +38,10 @@ public class PlayerService {
         updateLogic();
     }
 
+    public Player getNextPlayer() {
+        return players.get(getNextFigurine());
+    }
+
     private void updatePlayers() {
         if (players.isEmpty()) {
             gameLogicService.getGameEntity().getPlayers().forEach(p -> players.put(p.getFigurine(), p));
@@ -45,8 +49,11 @@ public class PlayerService {
     }
 
     private void setupNextPlayer() {
-        Suspect figurine = gameLogicService.getGameLogic().getNextPlayer().getFigurine();
-        currentPlayer.setValue(players.get(figurine));
+        currentPlayer.setValue(getNextPlayer());
+    }
+
+    private Suspect getNextFigurine() {
+        return gameLogicService.getGameLogic().getNextPlayer().getFigurine();
     }
 
     private void updateLogic() {
