@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class NextService {
+public class PlayerService {
 
     private final PlayerRepository playerRepository;
     private final GameLogicService gameLogicService;
@@ -23,7 +23,7 @@ public class NextService {
     private final ObjectProperty<Player> currentPlayer;
 
     @Autowired
-    public NextService(PlayerRepository playerRepository, GameLogicService gameLogicService, NotificationService notificationService) {
+    public PlayerService(PlayerRepository playerRepository, GameLogicService gameLogicService, NotificationService notificationService) {
         this.playerRepository = playerRepository;
         this.gameLogicService = gameLogicService;
         this.notificationService = notificationService;
