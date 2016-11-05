@@ -38,6 +38,10 @@ public class PlayerService {
         updateLogic();
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer.get();
+    }
+
     public Player getNextPlayer() {
         return players.get(getNextFigurine());
     }
