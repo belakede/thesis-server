@@ -1,10 +1,6 @@
 package me.belakede.thesis.server.game.service;
 
-import javafx.beans.property.SimpleMapProperty;
-import javafx.collections.MapChangeListener.Change;
-import javafx.collections.ObservableMap;
-import me.belakede.thesis.server.game.converter.PositionConverter;
-import me.belakede.thesis.server.game.domain.Position;
+import me.belakede.thesis.game.board.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,29 +8,29 @@ import org.springframework.stereotype.Service;
 public class MoveService {
 
     private final GameLogicService gameLogicService;
-    private final PositionConverter positionConverter;
-    private final NotificationService notificationService;
-    private final ObservableMap<String, Position> positions;
+    private final PositionService positionService;
 
     @Autowired
-    public MoveService(GameLogicService gameLogicService, PositionConverter positionConverter, NotificationService notificationService) {
+    public MoveService(GameLogicService gameLogicService, PositionService positionService) {
         this.gameLogicService = gameLogicService;
-        this.positionConverter = positionConverter;
-        this.notificationService = notificationService;
-        this.positions = new SimpleMapProperty<>();
-        hookupChangeListeners();
+        this.positionService = positionService;
     }
 
-    private void move(String user, Position position) {
-        // TODO create UserService to handle users
+    private void move(int row, int column) {
+        move(row, column);
+        update();
     }
 
-    private void hookupChangeListeners() {
-        positions.addListener((Change<? extends String, ? extends Position> change) -> {
-            if (change.wasAdded()) {
-                notificationService.broadcast(positionConverter.convert(change.getValueAdded()));
-            }
-        });
+    private void moveCurrentPlayer(int row, int column) {
+        gameLogicService.getGameLogic().move(getField(row, column));
+    }
+
+    private void update() {
+        positionService.update();
+    }
+
+    private Field getField(int row, int column) {
+        return gameLogicService.getGameLogic().getBoard().getField(row, column);
     }
 
 }
