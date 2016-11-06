@@ -25,9 +25,13 @@ public class PositionConverter {
         return positions.stream().map(this::convert).collect(Collectors.toList());
     }
 
+    public Position convert(Figurine figurine, Field field) {
+        return new Position(figurine.name(), field.getRow(), field.getColumn());
+    }
+
     public List<Position> convert(Map<Figurine, Field> fields) {
         return fields.entrySet().stream()
-                .map(e -> new Position(e.getKey().name(), e.getValue().getRow(), e.getValue().getColumn()))
+                .map(e -> convert(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
     }
 
