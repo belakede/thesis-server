@@ -53,6 +53,12 @@ public class GameService {
         }
     }
 
+    public void next(Principal principal) {
+        if (isCurrentPlayer(principal)) {
+            playerService.next();
+        }
+    }
+
     public void suspect(Principal principal, Suspicion suspicion) {
         if (isCurrentPlayer(principal)) {
             suspectService.suspect(suspicion);
