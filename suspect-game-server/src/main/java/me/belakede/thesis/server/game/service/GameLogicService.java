@@ -1,6 +1,7 @@
 package me.belakede.thesis.server.game.service;
 
 import me.belakede.thesis.server.game.converter.GameConverter;
+import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.repository.GameRepository;
 import me.belakede.thesis.server.game.repository.PlayerRepository;
@@ -39,7 +40,8 @@ public class GameLogicService {
         return gameConverter.convert(gameEntity, players);
     }
 
-    public void saveAndFlush() {
+    public void pauseTheGame() {
+        gameEntity.setStatus(Game.Status.PAUSED);
         gameRepository.saveAndFlush(gameEntity);
     }
 
