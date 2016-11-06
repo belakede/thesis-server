@@ -33,7 +33,7 @@ public class AccuseService {
         hookupChangeListeners();
     }
 
-    public void suspect(Suspicion suspicion) {
+    public void accuse(Suspicion suspicion) {
         suspicionObjectProperty.setValue(suspicion);
     }
 
