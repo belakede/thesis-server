@@ -11,6 +11,7 @@ import me.belakede.thesis.server.game.repository.PlayerRepository;
 import me.belakede.thesis.server.game.response.PlayerJoinedNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Optional;
 
@@ -35,8 +36,10 @@ public class JoinService {
         hookupChangeListeners();
     }
 
-    public void join(String username) {
+    public SseEmitter join(String username) {
+        SseEmitter emitter = notificationService.createEmitter(username);
         players.put(username, nullPlayer);
+        return emitter;
     }
 
     public void exit(String username) {
