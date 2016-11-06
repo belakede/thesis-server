@@ -16,7 +16,7 @@ public class MoveService {
         this.positionService = positionService;
     }
 
-    private void move(int row, int column) {
+    public void move(int row, int column) {
         move(row, column);
         update();
     }
