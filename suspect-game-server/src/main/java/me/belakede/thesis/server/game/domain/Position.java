@@ -20,20 +20,20 @@ public class Position implements Serializable {
     private Game game;
 
     @Column(nullable = false)
-    private Integer rowIndex;
+    private int rowIndex;
 
     @Column(nullable = false)
-    private Integer columnIndex;
+    private int columnIndex;
 
     public Position() {
         // It's required for an entity
     }
 
-    public Position(String figurine, Integer rowIndex, Integer columnIndex) {
+    public Position(String figurine, Integer rowIndex, int columnIndex) {
         this(figurine, null, rowIndex, columnIndex);
     }
 
-    public Position(String figurine, Game game, Integer rowIndex, Integer columnIndex) {
+    public Position(String figurine, Game game, Integer rowIndex, int columnIndex) {
         this.figurine = figurine;
         this.game = game;
         this.rowIndex = rowIndex;
@@ -64,19 +64,19 @@ public class Position implements Serializable {
         this.game = game;
     }
 
-    public Integer getRowIndex() {
+    public int getRowIndex() {
         return rowIndex;
     }
 
-    public void setRowIndex(Integer rowIndex) {
+    public void setRowIndex(int rowIndex) {
         this.rowIndex = rowIndex;
     }
 
-    public Integer getColumnIndex() {
+    public int getColumnIndex() {
         return columnIndex;
     }
 
-    public void setColumnIndex(Integer columnIndex) {
+    public void setColumnIndex(int columnIndex) {
         this.columnIndex = columnIndex;
     }
 
@@ -93,16 +93,16 @@ public class Position implements Serializable {
 
         return (figurine != null ? figurine.equals(position.figurine) : position.figurine == null)
                 && (game != null ? game.equals(position.game) : position.game == null)
-                && (rowIndex != null ? rowIndex.equals(position.rowIndex) : position.rowIndex == null)
-                && (columnIndex != null ? columnIndex.equals(position.columnIndex) : position.columnIndex == null);
+                && (rowIndex == position.rowIndex)
+                && (columnIndex == position.columnIndex);
     }
 
     @Override
     public int hashCode() {
         int result = figurine != null ? figurine.hashCode() : 0;
         result = 31 * result + (game != null ? game.hashCode() : 0);
-        result = 31 * result + (rowIndex != null ? rowIndex.hashCode() : 0);
-        result = 31 * result + (columnIndex != null ? columnIndex.hashCode() : 0);
+        result = 31 * result + rowIndex;
+        result = 31 * result + columnIndex;
         return result;
     }
 }
