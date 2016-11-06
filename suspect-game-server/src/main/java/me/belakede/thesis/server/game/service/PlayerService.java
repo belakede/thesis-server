@@ -38,6 +38,11 @@ public class PlayerService {
         updateLogic();
     }
 
+    public Player killPlayer() {
+        getCurrentPlayer().setAlive(false);
+        return playerRepository.save(getCurrentPlayer());
+    }
+
     public Player getCurrentPlayer() {
         return currentPlayer.get();
     }
