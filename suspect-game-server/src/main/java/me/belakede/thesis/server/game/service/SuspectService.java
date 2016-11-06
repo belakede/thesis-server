@@ -13,28 +13,30 @@ public class SuspectService {
 
     private final PlayerService playerService;
     private final GameLogicService gameLogicService;
+    private final PositionService positionService;
     private final NotificationService notificationService;
     private final ObjectProperty<Suspicion> suspicionObjectProperty;
 
     @Autowired
-    public SuspectService(PlayerService playerService, GameLogicService gameLogicService, NotificationService notificationService) {
+    public SuspectService(PlayerService playerService, GameLogicService gameLogicService, PositionService positionService, NotificationService notificationService) {
         this.playerService = playerService;
         this.gameLogicService = gameLogicService;
+        this.positionService = positionService;
         this.notificationService = notificationService;
         this.suspicionObjectProperty = new SimpleObjectProperty<>();
         hookupChangeListeners();
     }
 
     public void suspect(Suspicion suspicion) {
-        // TODO change positions
         suspicionObjectProperty.setValue(suspicion);
     }
 
     private void hookupChangeListeners() {
         suspicionObjectProperty.addListener((observable, oldValue, newValue) -> {
             if (null != newValue) {
-                notificationService.broadcast(new SuspicionNotification(newValue));
                 gameLogicService.getGameLogic().suspect(newValue);
+                notificationService.broadcast(new SuspicionNotification(newValue));
+                positionService.update();
                 notificationService.notify(playerService.getCurrentPlayer().getUsername(), new ShowYourCardNotification());
             }
         });
