@@ -1,6 +1,8 @@
 package me.belakede.thesis.server.game.domain;
 
 
+import me.belakede.thesis.game.board.Field;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -78,6 +80,10 @@ public class Position implements Serializable {
 
     public void setColumnIndex(int columnIndex) {
         this.columnIndex = columnIndex;
+    }
+
+    public boolean isIdentical(Field field) {
+        return rowIndex == field.getRow() && columnIndex == field.getColumn();
     }
 
     @Override
