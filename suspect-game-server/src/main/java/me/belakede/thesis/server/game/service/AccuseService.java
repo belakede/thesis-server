@@ -44,7 +44,9 @@ public class AccuseService {
                 gameLogicService.getGameLogic().accuse(newValue);
                 positionService.update();
                 if (gameLogicService.getGameLogic().isGameEnded()) {
+                    gameLogicService.finishTheGame();
                     notificationService.broadcast(new GameEndedNotification());
+                    notificationService.close();
                 } else {
                     Player currentPlayer = playerService.killPlayer();
                     notificationService.broadcast(getPlayerOutNotification(currentPlayer));
