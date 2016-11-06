@@ -40,9 +40,20 @@ public class GameLogicService {
         return gameConverter.convert(gameEntity, players);
     }
 
+    public boolean gameInProgress() {
+        return gameLogic != null;
+    }
+
     public void pauseTheGame() {
-        gameEntity.setStatus(Game.Status.PAUSED);
-        gameRepository.saveAndFlush(gameEntity);
+        setStatus(Game.Status.PAUSED);
+        saveAndFlush();
+        clearGames();
+    }
+
+    public void finishTheGame() {
+        setStatus(Game.Status.FINISHED);
+        saveAndFlush();
+        clearGames();
     }
 
     public void setGame(me.belakede.thesis.server.game.domain.Game game) {
@@ -53,6 +64,19 @@ public class GameLogicService {
     public void setGame(me.belakede.thesis.game.Game game) {
         gameLogic = game;
         gameEntity = gameConverter.convert(game);
+    }
+
+    private void setStatus(Game.Status status) {
+        gameEntity.setStatus(status);
+    }
+
+    private void saveAndFlush() {
+        gameRepository.saveAndFlush(gameEntity);
+    }
+
+    private void clearGames() {
+        gameLogic = null;
+        gameEntity = null;
     }
 
 }
