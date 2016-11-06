@@ -4,10 +4,12 @@ import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import me.belakede.thesis.server.game.converter.PlayerConverter;
+import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.NullPlayer;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.exception.InvalidPlayerConfiguration;
 import me.belakede.thesis.server.game.repository.PlayerRepository;
+import me.belakede.thesis.server.game.response.GamePausedNotification;
 import me.belakede.thesis.server.game.response.PlayerJoinedNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,9 +55,20 @@ public class JoinService {
                 notifyPlayer(change.getValueAdded());
                 startTheGameIfNecessary();
             } else {
-                // TODO stop the game and store the current state when any user leaves the game
+                saveCurrentGame();
+                pauseGame();
             }
         });
+    }
+
+    private void pauseGame() {
+        notificationService.broadcast(new GamePausedNotification());
+        notificationService.close();
+    }
+
+    private void saveCurrentGame() {
+        gameLogicService.getGameEntity().setStatus(Game.Status.PAUSED);
+        gameLogicService.saveAndFlush();
     }
 
     private Player findPlayer(String username) {
