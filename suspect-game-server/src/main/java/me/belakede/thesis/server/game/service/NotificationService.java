@@ -1,8 +1,10 @@
 package me.belakede.thesis.server.game.service;
 
+import me.belakede.thesis.server.game.response.GamePausedNotification;
 import me.belakede.thesis.server.game.response.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
@@ -19,10 +21,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NotificationService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NotificationService.class);
+
+    private final GameLogicService gameLogicService;
     private final Map<String, SseEmitter> emitters;
 
-    public NotificationService() {
-        emitters = new ConcurrentHashMap<>();
+    @Autowired
+    public NotificationService(GameLogicService gameLogicService) {
+        this.gameLogicService = gameLogicService;
+        this.emitters = new ConcurrentHashMap<>();
     }
 
     public SseEmitter createEmitter(String username) {
@@ -45,14 +51,37 @@ public class NotificationService {
         List<String> missing = new ArrayList<>();
         emitters.entrySet().forEach(entry -> {
             Notification message = specialNotifications.containsKey(entry.getKey()) ? specialNotifications.get(entry.getKey()) : notification;
-            if (!notify(entry.getKey(), message)) {
+            if (!notifyPlayer(entry.getKey(), message)) {
                 missing.add(entry.getKey());
             }
         });
-        missing.forEach(emitters::remove);
+        if (!missing.isEmpty()) {
+            close();
+        }
     }
 
-    public boolean notify(String user, Notification notification) {
+    public void notify(String user, Notification notification) {
+        if (notifyPlayer(user, notification)) {
+            close();
+        }
+    }
+
+    public void pause() {
+        pauseGame();
+        close();
+    }
+
+    public void close() {
+        emitters.values().forEach(ResponseBodyEmitter::complete);
+        emitters.clear();
+    }
+
+    private void pauseGame() {
+        gameLogicService.pauseTheGame();
+        emitters.entrySet().forEach(es -> notifyPlayer(es.getKey(), new GamePausedNotification()));
+    }
+
+    private boolean notifyPlayer(String user, Notification notification) {
         boolean sent = false;
         if (emitters.containsKey(user)) {
             try {
@@ -65,11 +94,5 @@ public class NotificationService {
         }
         return sent;
     }
-
-    public void close() {
-        emitters.values().forEach(ResponseBodyEmitter::complete);
-        emitters.clear();
-    }
-
 
 }
