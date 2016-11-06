@@ -4,7 +4,6 @@ import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import me.belakede.thesis.server.game.converter.PlayerConverter;
-import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.NullPlayer;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.exception.InvalidPlayerConfiguration;
@@ -55,20 +54,15 @@ public class JoinService {
                 notifyPlayer(change.getValueAdded());
                 startTheGameIfNecessary();
             } else {
-                saveCurrentGame();
                 pauseGame();
             }
         });
     }
 
     private void pauseGame() {
+        gameLogicService.pauseTheGame();
         notificationService.broadcast(new GamePausedNotification());
         notificationService.close();
-    }
-
-    private void saveCurrentGame() {
-        gameLogicService.getGameEntity().setStatus(Game.Status.PAUSED);
-        gameLogicService.saveAndFlush();
     }
 
     private Player findPlayer(String username) {
