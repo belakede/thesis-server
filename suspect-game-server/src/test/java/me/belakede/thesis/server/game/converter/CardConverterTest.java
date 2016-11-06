@@ -9,8 +9,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 public class CardConverterTest {
@@ -36,5 +39,14 @@ public class CardConverterTest {
         PlayerCard actual = testSubject.convert(Weapon.ROPE);
         assertThat(actual, notNullValue());
         assertThat(actual.getCard(), is(Weapon.ROPE.name()));
+    }
+
+    @Test
+    public void testConvertShouldReturnACollectionOfString() {
+        Player player = Mockito.mock(Player.class);
+        List<PlayerCard> playerCards = Arrays.asList(new PlayerCard(player, Room.BALLROOM.name()), new PlayerCard(player, Weapon.KNIFE.name()));
+        Collection<String> actual = testSubject.convert(playerCards);
+        assertThat(actual.size(), is(2));
+        assertThat(actual, containsInAnyOrder("BALLROOM", "KNIFE"));
     }
 }
