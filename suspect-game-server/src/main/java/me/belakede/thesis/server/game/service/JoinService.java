@@ -8,7 +8,6 @@ import me.belakede.thesis.server.game.domain.NullPlayer;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.exception.InvalidPlayerConfiguration;
 import me.belakede.thesis.server.game.repository.PlayerRepository;
-import me.belakede.thesis.server.game.response.GamePausedNotification;
 import me.belakede.thesis.server.game.response.PlayerJoinedNotification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,15 +53,9 @@ public class JoinService {
                 notifyPlayer(change.getValueAdded());
                 startTheGameIfNecessary();
             } else {
-                pauseGame();
+                notificationService.pause();
             }
         });
-    }
-
-    private void pauseGame() {
-        gameLogicService.pauseTheGame();
-        notificationService.broadcast(new GamePausedNotification());
-        notificationService.close();
     }
 
     private Player findPlayer(String username) {
