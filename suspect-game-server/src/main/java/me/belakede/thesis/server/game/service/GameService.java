@@ -2,9 +2,11 @@ package me.belakede.thesis.server.game.service;
 
 import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.game.equipment.Suspicion;
+import me.belakede.thesis.server.game.exception.MissingGameException;
 import me.belakede.thesis.server.game.response.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.security.Principal;
 
@@ -32,10 +34,11 @@ public class GameService {
         this.playerService = playerService;
     }
 
-    public void join(Principal principal) {
+    public SseEmitter join(Principal principal) {
         if (!gameLogicService.gameInProgress()) {
-            joinService.join(principal.getName());
+            return joinService.join(principal.getName());
         }
+        throw new MissingGameException("There is no game which you could join!");
     }
 
     public void roll(Principal principal) {
