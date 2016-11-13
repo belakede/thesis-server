@@ -51,7 +51,7 @@ public class NoteController {
     public void store(Principal principal, @RequestBody NoteRequest noteRequest) throws MissingAuthorException {
         Author author = authorService.findByNameAndRoom(principal.getName(), noteRequest.getRoom());
         Optional<Card> card = Cards.valueOf(noteRequest.getCard());
-        noteService.create(new Note(author, noteRequest.getOwner(), card.orElse(null), noteRequest.getMarker()));
+        noteService.store(new Note(author, noteRequest.getOwner(), card.orElse(null), noteRequest.getMarker()));
     }
 
 }
