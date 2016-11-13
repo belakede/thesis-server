@@ -1,7 +1,7 @@
 package me.belakede.thesis.server.game.domain;
 
 
-import me.belakede.thesis.game.board.Field;
+import me.belakede.thesis.game.field.Field;
 
 import javax.persistence.*;
 import java.io.Serializable;

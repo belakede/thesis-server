@@ -1,6 +1,6 @@
 package me.belakede.thesis.server.game.service;
 
-import me.belakede.thesis.game.board.Field;
+import me.belakede.thesis.game.field.Field;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

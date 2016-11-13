@@ -1,6 +1,6 @@
 package me.belakede.thesis.server.game.converter;
 
-import me.belakede.thesis.game.board.Field;
+import me.belakede.thesis.game.field.Field;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.internal.game.util.Figurines;
 import me.belakede.thesis.server.game.domain.Position;

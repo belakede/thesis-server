@@ -3,7 +3,7 @@ package me.belakede.thesis.server.game.service;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
-import me.belakede.thesis.game.board.Field;
+import me.belakede.thesis.game.field.Field;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.server.game.converter.PositionConverter;
 import me.belakede.thesis.server.game.domain.Position;

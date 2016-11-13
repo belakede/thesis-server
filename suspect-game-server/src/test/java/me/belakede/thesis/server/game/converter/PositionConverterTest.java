@@ -1,10 +1,10 @@
 package me.belakede.thesis.server.game.converter;
 
-import me.belakede.thesis.game.board.Field;
+import me.belakede.thesis.game.field.Field;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.game.equipment.Suspect;
 import me.belakede.thesis.game.equipment.Weapon;
-import me.belakede.thesis.internal.game.board.FieldFactory;
+import me.belakede.thesis.internal.game.field.FieldFactory;
 import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Position;
 import me.belakede.thesis.server.game.response.Coordinate;
