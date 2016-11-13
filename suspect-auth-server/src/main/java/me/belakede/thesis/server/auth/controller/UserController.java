@@ -18,7 +18,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
-@EnableResourceServer
 public class UserController {
 
     @Autowired
