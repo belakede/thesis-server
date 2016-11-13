@@ -1,5 +1,6 @@
 package me.belakede.thesis.server.note.repository;
 
+import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.server.note.domain.Author;
 import me.belakede.thesis.server.note.domain.Note;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,5 +12,6 @@ import java.util.List;
 public interface NoteRepository extends JpaRepository<Note, Long> {
 
     List<Note> findByAuthor(Author author);
+    Note findByAuthorAndCardAndOwner(Author author, Card card, String owner);
 
 }
