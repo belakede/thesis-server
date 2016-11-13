@@ -4,7 +4,7 @@ import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.request.GamesRequest;
 import me.belakede.thesis.server.game.response.GamesResponse;
-import me.belakede.thesis.server.game.service.GameService;
+import me.belakede.thesis.server.game.service.GameLogicService;
 import me.belakede.thesis.server.game.service.LobbyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +18,12 @@ import java.util.stream.Collectors;
 public class GamesController {
 
     private final LobbyService lobbyService;
-    private final GameService gameService;
+    private final GameLogicService gameSgameLogicServicercie;
 
     @Autowired
-    public GamesController(LobbyService lobbyService, GameService gameService) {
+    public GamesController(LobbyService lobbyService, GameLogicService gameSgameLogicServicercie) {
         this.lobbyService = lobbyService;
-        this.gameService = gameService;
+        this.gameSgameLogicServicercie = gameSgameLogicServicercie;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -50,7 +50,7 @@ public class GamesController {
     @RequestMapping(value = "/start/{id}", method = RequestMethod.POST)
     public void start(@PathVariable("id") Long id) {
         Game game = lobbyService.findById(id);
-        gameService.setGame(game);
+        gameSgameLogicServicercie.setGame(game);
     }
 
 }
