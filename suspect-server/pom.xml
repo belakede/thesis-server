@@ -13,5 +13,28 @@
     <groupId>me.belakede.thesis</groupId>
     <artifactId>suspect-server</artifactId>
     <version>1.0-SNAPSHOT</version>
-    
+
+    <dependencies>
+        <dependency>
+            <groupId>me.belakede.thesis</groupId>
+            <artifactId>suspect-auth-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>me.belakede.thesis</groupId>
+            <artifactId>suspect-chat-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>me.belakede.thesis</groupId>
+            <artifactId>suspect-note-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>me.belakede.thesis</groupId>
+            <artifactId>suspect-game-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 </project>
