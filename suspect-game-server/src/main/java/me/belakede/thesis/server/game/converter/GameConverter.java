@@ -43,7 +43,7 @@ public class GameConverter {
         do {
             players.add(playerConverter.convert(game.getCurrentPlayer()));
             game.next();
-        } while (current.equals(game.getCurrentPlayer()));
+        } while (!current.equals(game.getCurrentPlayer()));
         for (int i = 0; i < players.size(); i++) {
             players.get(i).setOrdinalNumber(i);
         }
