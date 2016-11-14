@@ -33,7 +33,7 @@ public class Game implements Serializable {
     @Column(nullable = false)
     private Status status;
 
-    @OneToOne(mappedBy = "game", orphanRemoval = true)
+    @OneToOne(mappedBy = "game", orphanRemoval = true, cascade = CascadeType.PERSIST)
     private Mystery mystery;
 
     @LazyCollection(LazyCollectionOption.FALSE)
