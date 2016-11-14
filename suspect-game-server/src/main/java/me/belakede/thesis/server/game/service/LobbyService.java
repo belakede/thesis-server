@@ -2,9 +2,7 @@ package me.belakede.thesis.server.game.service;
 
 import me.belakede.thesis.game.equipment.BoardType;
 import me.belakede.thesis.internal.game.util.GameBuilder;
-import me.belakede.thesis.server.auth.domain.User;
 import me.belakede.thesis.server.auth.exception.MissingUserException;
-import me.belakede.thesis.server.auth.service.UserService;
 import me.belakede.thesis.server.game.converter.GameConverter;
 import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.exception.MissingBoardException;
@@ -14,38 +12,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class LobbyService {
 
     private final GameRepository gameRepository;
     private final GameConverter gameConverter;
-    private final UserService userService;
 
     @Autowired
-    public LobbyService(GameRepository gameRepository, GameConverter gameConverter, UserService userService) {
+    public LobbyService(GameRepository gameRepository, GameConverter gameConverter) {
         this.gameRepository = gameRepository;
         this.gameConverter = gameConverter;
-        this.userService = userService;
     }
 
     /**
      * @param boardType
-     * @param usernames
+     * @param users
      * @return
      * @throws MissingUserException
      * @throws MissingBoardException
      */
-    public Game create(BoardType boardType, Collection<String> usernames) {
+    public Game create(BoardType boardType, List<String> users) {
         try {
-            List<User> users = usernames.stream().map(u -> userService.findByUsername(u)).collect(Collectors.toList());
             me.belakede.thesis.game.Game gameLogic = GameBuilder.create().boardType(boardType).mystery().players(users.size()).positions().build();
             Game game = gameConverter.convert(gameLogic);
             for (int i = 0; i < game.getPlayers().size(); i++) {
-                game.getPlayers().get(i).setUsername(users.get(i).getUsername());
+                game.getPlayers().get(i).setUsername(users.get(i));
             }
             return gameRepository.saveAndFlush(game);
         } catch (IOException e) {

@@ -9,6 +9,7 @@ import me.belakede.thesis.server.game.service.LobbyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -28,7 +29,7 @@ public class GamesController {
 
     @RequestMapping(method = RequestMethod.POST)
     public GamesResponse create(@RequestBody GamesRequest gamesRequest) {
-        Game game = lobbyService.create(gamesRequest.getBoardType(), gamesRequest.getUsers());
+        Game game = lobbyService.create(gamesRequest.getBoardType(), new ArrayList<>(gamesRequest.getUsers()));
         Set<String> users = game.getPlayers().stream().map(p -> p.getUsername()).collect(Collectors.toSet());
         return new GamesResponse(game.getId(), game.getBoardType(), users);
     }
