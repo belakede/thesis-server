@@ -2,6 +2,8 @@ package me.belakede.thesis.server.game.domain;
 
 
 import me.belakede.thesis.game.equipment.BoardType;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -34,10 +36,12 @@ public class Game implements Serializable {
     @OneToOne(mappedBy = "game", orphanRemoval = true)
     private Mystery mystery;
 
-    @OneToMany(mappedBy = "game", orphanRemoval = true, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "game", orphanRemoval = true)
     private List<Player> players;
 
-    @OneToMany(mappedBy = "game", orphanRemoval = true, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "game", orphanRemoval = true)
     private List<Position> positions;
 
     public Game() {
