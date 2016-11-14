@@ -2,7 +2,6 @@ package me.belakede.thesis.server.game.service;
 
 import me.belakede.thesis.game.equipment.BoardType;
 import me.belakede.thesis.internal.game.util.GameBuilder;
-import me.belakede.thesis.server.auth.exception.MissingUserException;
 import me.belakede.thesis.server.game.converter.GameConverter;
 import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.exception.MissingBoardException;
@@ -30,7 +29,6 @@ public class LobbyService {
      * @param boardType
      * @param users
      * @return
-     * @throws MissingUserException
      * @throws MissingBoardException
      */
     public Game create(BoardType boardType, List<String> users) {
