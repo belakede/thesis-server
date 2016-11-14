@@ -1,5 +1,6 @@
 package me.belakede.thesis.server.game.controller;
 
+import me.belakede.thesis.game.equipment.Suspect;
 import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.request.GamesRequest;
@@ -10,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,8 +32,7 @@ public class GamesController {
     @RequestMapping(method = RequestMethod.POST)
     public GamesResponse create(@RequestBody GamesRequest gamesRequest) {
         Game game = lobbyService.create(gamesRequest.getBoardType(), new ArrayList<>(gamesRequest.getUsers()));
-        Set<String> users = game.getPlayers().stream().map(p -> p.getUsername()).collect(Collectors.toSet());
-        return new GamesResponse(game.getId(), game.getBoardType(), users);
+        return new GamesResponse(game.getId(), game.getBoardType(), createUsers(game.getPlayers()));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -42,9 +43,7 @@ public class GamesController {
     @RequestMapping(method = RequestMethod.GET)
     public List<GamesResponse> games() {
         return lobbyService.findAll().stream()
-                .map(g -> new GamesResponse(g.getId(), g.getBoardType(), g.getPlayers().stream()
-                        .map(Player::getUsername)
-                        .collect(Collectors.toList())))
+                .map(g -> new GamesResponse(g.getId(), g.getBoardType(), createUsers(g.getPlayers())))
                 .collect(Collectors.toList());
     }
 
@@ -52,6 +51,12 @@ public class GamesController {
     public void start(@PathVariable("id") Long id) {
         Game game = lobbyService.findById(id);
         gameSgameLogicServicercie.setGame(game);
+    }
+
+    private Map<Suspect, String> createUsers(List<Player> players) {
+        Map<Suspect, String> users = new HashMap<>();
+        players.forEach(player -> users.put(player.getFigurine(), player.getUsername()));
+        return users;
     }
 
 }
