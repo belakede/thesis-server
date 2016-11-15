@@ -21,12 +21,12 @@ import java.util.stream.Collectors;
 public class GamesController {
 
     private final LobbyService lobbyService;
-    private final GameLogicService gameSgameLogicServicercie;
+    private final GameLogicService gameLogicService;
 
     @Autowired
-    public GamesController(LobbyService lobbyService, GameLogicService gameSgameLogicServicercie) {
+    public GamesController(LobbyService lobbyService, GameLogicService gameLogicService) {
         this.lobbyService = lobbyService;
-        this.gameSgameLogicServicercie = gameSgameLogicServicercie;
+        this.gameLogicService = gameLogicService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -50,7 +50,7 @@ public class GamesController {
     @RequestMapping(value = "/start/{id}", method = RequestMethod.POST)
     public void start(@PathVariable("id") Long id) {
         Game game = lobbyService.findById(id);
-        gameSgameLogicServicercie.setGame(game);
+        gameLogicService.setGame(game);
     }
 
     private Map<Suspect, String> createUsers(List<Player> players) {
