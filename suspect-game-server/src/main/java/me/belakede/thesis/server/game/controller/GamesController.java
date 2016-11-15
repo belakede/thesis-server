@@ -32,7 +32,7 @@ public class GamesController {
     @RequestMapping(method = RequestMethod.POST)
     public GamesResponse create(@RequestBody GamesRequest gamesRequest) {
         Game game = lobbyService.create(gamesRequest.getBoardType(), new ArrayList<>(gamesRequest.getUsers()));
-        return new GamesResponse(game.getId(), game.getBoardType(), createUsers(game.getPlayers()));
+        return new GamesResponse(game.getId(), game.getBoardType(), game.getCreated(), createUsers(game.getPlayers()));
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -43,7 +43,7 @@ public class GamesController {
     @RequestMapping(method = RequestMethod.GET)
     public List<GamesResponse> games() {
         return lobbyService.findAll().stream()
-                .map(g -> new GamesResponse(g.getId(), g.getBoardType(), createUsers(g.getPlayers())))
+                .map(g -> new GamesResponse(g.getId(), g.getBoardType(), g.getCreated(), createUsers(g.getPlayers())))
                 .collect(Collectors.toList());
     }
 
