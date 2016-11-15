@@ -59,11 +59,15 @@ public class GameLogicService {
     public void setGame(me.belakede.thesis.server.game.domain.Game game) {
         gameEntity = game;
         gameLogic = gameConverter.convert(game);
+        gameEntity.setStatus(Game.Status.IN_PROGRESS);
+        gameRepository.save(gameEntity);
     }
 
     public void setGame(me.belakede.thesis.game.Game game) {
         gameLogic = game;
         gameEntity = gameConverter.convert(game);
+        gameEntity.setStatus(Game.Status.IN_PROGRESS);
+        gameRepository.save(gameEntity);
     }
 
     private void setStatus(Game.Status status) {
