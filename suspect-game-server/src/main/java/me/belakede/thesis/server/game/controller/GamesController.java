@@ -38,6 +38,9 @@ public class GamesController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") Long id) {
+        if (gameLogicService.gameInProgress()) {
+            throw new GameIsAlreadyRunningException("A game is running. Please try later.");
+        }
         lobbyService.remove(id);
     }
 
@@ -51,11 +54,10 @@ public class GamesController {
     @RequestMapping(value = "/start/{id}", method = RequestMethod.POST)
     public void start(@PathVariable("id") Long id) {
         if (gameLogicService.gameInProgress()) {
-            throw new GameIsAlreadyRunningException("A game is running. Please try later");
-        } else {
-            Game game = lobbyService.findById(id);
-            gameLogicService.setGame(game);
+            throw new GameIsAlreadyRunningException("A game is running. Please try later.");
         }
+        Game game = lobbyService.findById(id);
+        gameLogicService.setGame(game);
     }
 
     private Map<Suspect, String> createUsers(List<Player> players) {
