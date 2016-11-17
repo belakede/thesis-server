@@ -107,6 +107,7 @@ public class NotificationService {
     private void pauseGame() {
         gameLogicService.pauseTheGame();
         emitters.entrySet().forEach(es -> notifyPlayer(es.getKey(), new GamePausedNotification()));
+        emitters.clear();
     }
 
     private boolean notifyPlayer(String user, Notification notification) {
