@@ -87,11 +87,11 @@ public class NotificationService {
             while (true) {
                 int sleepTime = 30 * 1000;
                 if (gameLogicService.gameInProgress() && !emitters.isEmpty()) {
-                    LOGGER.info("Sending heartbeat...");
+                    LOGGER.debug("Sending heartbeat...");
                     broadcast(new HeartBeatNotification());
                     sleepTime = 10 * 1000;
                 }
-                LOGGER.info("Waiting {} seconds before next", sleepTime / 1000);
+                LOGGER.debug("Waiting {} seconds before next", sleepTime / 1000);
                 try {
                     Thread.sleep(sleepTime);
                 } catch (InterruptedException e) {
