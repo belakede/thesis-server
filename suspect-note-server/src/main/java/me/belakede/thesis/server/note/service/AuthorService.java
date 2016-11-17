@@ -17,7 +17,11 @@ public class AuthorService {
     }
 
     public Author create(String name, String room) {
-        return authorRepository.save(new Author(name, room));
+        Author author = authorRepository.findByNameAndRoom(name, room);
+        if (author == null) {
+            author = authorRepository.save(new Author(name, room));
+        }
+        return author;
     }
 
     public Author findByNameAndRoom(String name, String room) throws MissingAuthorException {
