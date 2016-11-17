@@ -6,6 +6,8 @@ import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.repository.GameRepository;
 import me.belakede.thesis.server.game.repository.PlayerRepository;
 import me.belakede.thesis.server.game.response.GameStatusNotification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,8 @@ import java.util.List;
 
 @Component
 public class GameLogicService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameLogicService.class);
 
     private final GameConverter gameConverter;
     private final GameRepository gameRepository;
@@ -41,6 +45,7 @@ public class GameLogicService {
     }
 
     public boolean gameInProgress() {
+        LOGGER.info("Game in progress? {}", gameLogic != null);
         return gameLogic != null;
     }
 

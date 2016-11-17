@@ -1,6 +1,6 @@
 package me.belakede.thesis.server.game.service;
 
-import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import me.belakede.thesis.server.game.converter.PlayerConverter;
@@ -9,6 +9,8 @@ import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.exception.InvalidPlayerConfiguration;
 import me.belakede.thesis.server.game.repository.PlayerRepository;
 import me.belakede.thesis.server.game.response.PlayerJoinedNotification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -17,6 +19,8 @@ import java.util.Optional;
 
 @Service
 public class JoinService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(JoinService.class);
 
     private final PlayerRepository playerRepository;
     private final PlayerConverter playerConverter;
@@ -31,14 +35,16 @@ public class JoinService {
         this.playerConverter = playerConverter;
         this.gameLogicService = gameLogicService;
         this.notificationService = notificationService;
-        this.players = new SimpleMapProperty<>();
+        this.players = FXCollections.observableHashMap();
         this.nullPlayer = new NullPlayer();
         hookupChangeListeners();
     }
 
     public SseEmitter join(String username) {
+        LOGGER.info("{} tries to join.", username);
         SseEmitter emitter = notificationService.createEmitter(username);
         players.put(username, nullPlayer);
+        LOGGER.info("Returning with emitter {}", emitter);
         return emitter;
     }
 
@@ -48,12 +54,19 @@ public class JoinService {
 
     private void hookupChangeListeners() {
         players.addListener((MapChangeListener.Change<? extends String, ? extends Player> change) -> {
+            LOGGER.info("Players map changed: {}", change);
             if (change.wasAdded() && nullPlayer.equals(change.getValueAdded())) {
-                players.put(change.getKey(), findPlayer(change.getKey()));
+                Player player = findPlayer(change.getKey());
+                LOGGER.info("NullPlayer was added. Changing it to {}", player);
+                players.put(change.getKey(), player);
             } else if (change.wasAdded() && !nullPlayer.equals(change.getValueAdded())) {
+                LOGGER.info("Storing username {} for player {}", change.getValueAdded(), change.getKey());
                 updateUsername(change.getValueAdded(), change.getKey());
+                LOGGER.info("Broadcasting new user arrived");
                 broadcast(change.getKey());
+                LOGGER.info("Sending initial data to {}", change.getValueAdded());
                 notifyPlayer(change.getValueAdded());
+                LOGGER.info("Starting game if necessary");
                 startTheGameIfNecessary();
             } else {
                 notificationService.pause();

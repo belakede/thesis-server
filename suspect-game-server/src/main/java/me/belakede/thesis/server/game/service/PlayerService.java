@@ -1,8 +1,8 @@
 package me.belakede.thesis.server.game.service;
 
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleMapProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.game.equipment.Suspect;
@@ -27,7 +27,7 @@ public class PlayerService {
         this.playerRepository = playerRepository;
         this.gameLogicService = gameLogicService;
         this.notificationService = notificationService;
-        this.players = new SimpleMapProperty<>();
+        this.players = FXCollections.observableHashMap();
         this.currentPlayer = new SimpleObjectProperty<>(new NullPlayer());
         hookupChangeListeners();
     }

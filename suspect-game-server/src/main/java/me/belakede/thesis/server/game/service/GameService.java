@@ -4,6 +4,8 @@ import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.game.equipment.Suspicion;
 import me.belakede.thesis.server.game.exception.MissingGameException;
 import me.belakede.thesis.server.game.response.Coordinate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
@@ -12,6 +14,8 @@ import java.security.Principal;
 
 @Service
 public class GameService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameService.class);
 
     private final GameLogicService gameLogicService;
     private final JoinService joinService;
@@ -35,8 +39,11 @@ public class GameService {
     }
 
     public SseEmitter join(Principal principal) {
-        if (!gameLogicService.gameInProgress()) {
-            return joinService.join(principal.getName());
+        if (gameLogicService.gameInProgress()) {
+            LOGGER.info("Opening channel for {}", principal.getName());
+            SseEmitter emitter = joinService.join(principal.getName());
+            LOGGER.info("Emitter created for {}: ", principal.getName(), emitter);
+            return emitter;
         }
         throw new MissingGameException("There is no game which you could join!");
     }

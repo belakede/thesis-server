@@ -1,10 +1,10 @@
 package me.belakede.thesis.server.game.service;
 
-import javafx.beans.property.SimpleMapProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
-import me.belakede.thesis.game.field.Field;
 import me.belakede.thesis.game.equipment.Figurine;
+import me.belakede.thesis.game.field.Field;
 import me.belakede.thesis.server.game.converter.PositionConverter;
 import me.belakede.thesis.server.game.domain.Position;
 import me.belakede.thesis.server.game.repository.PositionRepository;
@@ -26,7 +26,7 @@ public class PositionService {
         this.positionConverter = positionConverter;
         this.positionRepository = positionRepository;
         this.notificationService = notificationService;
-        this.positions = new SimpleMapProperty<>();
+        this.positions = FXCollections.observableHashMap();
         hookupChangeListeners();
     }
 

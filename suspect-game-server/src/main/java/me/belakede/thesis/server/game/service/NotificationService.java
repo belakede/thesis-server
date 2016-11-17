@@ -32,6 +32,7 @@ public class NotificationService {
     }
 
     public SseEmitter createEmitter(String username) {
+        LOGGER.info("Creating emitter for {}", username);
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
         emitters.put(username, emitter);
         return emitter;
@@ -55,13 +56,16 @@ public class NotificationService {
                 missing.add(entry.getKey());
             }
         });
+        LOGGER.info("Missing players: ", missing);
         if (!missing.isEmpty()) {
+            LOGGER.info("Closing connections.");
             close();
         }
     }
 
     public void notify(String user, Notification notification) {
-        if (notifyPlayer(user, notification)) {
+        if (!notifyPlayer(user, notification)) {
+            LOGGER.info("Can't notify player. Closing connections!");
             close();
         }
     }
@@ -72,6 +76,7 @@ public class NotificationService {
     }
 
     public void close() {
+        LOGGER.info("Closing emitters...");
         emitters.values().forEach(ResponseBodyEmitter::complete);
         emitters.clear();
     }
@@ -85,7 +90,9 @@ public class NotificationService {
         boolean sent = false;
         if (emitters.containsKey(user)) {
             try {
-                emitters.get(user).send(notification, MediaType.APPLICATION_JSON);
+                SseEmitter emitter = emitters.get(user);
+                LOGGER.info("Notification for {} on channel {}: {}", user, emitter, notification);
+                emitter.send(notification, MediaType.APPLICATION_JSON);
                 sent = true;
             } catch (IOException exception) {
                 emitters.get(user).complete();

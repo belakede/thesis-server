@@ -7,6 +7,8 @@ import me.belakede.thesis.server.game.request.ShowRequest;
 import me.belakede.thesis.server.game.request.SuspectRequest;
 import me.belakede.thesis.server.game.response.Coordinate;
 import me.belakede.thesis.server.game.service.GameService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +22,7 @@ import java.security.Principal;
 @RequestMapping("/game")
 public class GameController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(GameController.class);
     private final GameService gameService;
 
     @Autowired
@@ -29,11 +32,13 @@ public class GameController {
 
     @RequestMapping(value = "/join", method = RequestMethod.GET)
     public SseEmitter join(Principal principal) {
+        LOGGER.info("{} tries to join", principal.getName());
         return gameService.join(principal);
     }
 
     @RequestMapping(value = "/leave", method = RequestMethod.POST)
     public void leave(Principal principal) {
+        LOGGER.info("{} lefts the game", principal.getName());
         gameService.exit(principal);
     }
 
