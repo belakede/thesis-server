@@ -9,6 +9,7 @@ import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.exception.InvalidPlayerConfiguration;
 import me.belakede.thesis.server.game.repository.PlayerRepository;
 import me.belakede.thesis.server.game.response.PlayerJoinedNotification;
+import me.belakede.thesis.server.game.response.PlayerStatusNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +102,9 @@ public class JoinService {
     }
 
     private void notifyPlayer(Player player) {
-        notificationService.notify(player.getUsername(), playerConverter.convert(player));
+        PlayerStatusNotification notification = playerConverter.convert(player);
+        notification.setAlreadyWaiting(players.keySet());
+        notificationService.notify(player.getUsername(), notification);
     }
 
     private void startTheGameIfNecessary() {
