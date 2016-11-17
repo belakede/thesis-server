@@ -17,7 +17,11 @@ public class SenderService {
     }
 
     public Sender create(String name, String room) {
-        return repository.save(new Sender(name, room));
+        Sender sender = repository.findByNameAndRoom(name, room);
+        if (sender == null) {
+            sender = repository.save(new Sender(name, room));
+        }
+        return sender;
     }
 
     public Sender findByNameAndRoom(String name, String room) throws MissingSenderException {
