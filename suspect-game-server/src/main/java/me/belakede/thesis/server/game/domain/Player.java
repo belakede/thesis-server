@@ -1,6 +1,8 @@
 package me.belakede.thesis.server.game.domain;
 
 import me.belakede.thesis.game.equipment.Suspect;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -36,7 +38,8 @@ public class Player implements Serializable {
     @Column(nullable = false)
     private Boolean current;
 
-    @OneToMany(mappedBy = "player", orphanRemoval = true, fetch = FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "player", orphanRemoval = true, cascade = CascadeType.ALL)
     private Set<PlayerCard> cards;
 
     public Player() {
