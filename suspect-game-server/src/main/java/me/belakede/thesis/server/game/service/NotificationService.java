@@ -58,15 +58,15 @@ public class NotificationService {
         });
         LOGGER.info("Missing players: ", missing);
         if (!missing.isEmpty()) {
-            LOGGER.info("Closing connections.");
-            close();
+            LOGGER.info("Pausing game.");
+            pause();
         }
     }
 
     public void notify(String user, Notification notification) {
         if (!notifyPlayer(user, notification)) {
-            LOGGER.info("Can't notify player. Closing connections!");
-            close();
+            LOGGER.info("Can't notify player. Pausing game!");
+            pause();
         }
     }
 
