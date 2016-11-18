@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -105,9 +106,12 @@ public class NotificationService {
     }
 
     private void pauseGame() {
-        gameLogicService.pauseTheGame();
-        emitters.entrySet().forEach(es -> notifyPlayer(es.getKey(), new GamePausedNotification()));
-        emitters.clear();
+        try {
+            gameLogicService.pauseTheGame();
+            emitters.entrySet().forEach(es -> notifyPlayer(es.getKey(), new GamePausedNotification()));
+        } finally {
+            emitters.clear();
+        }
     }
 
     private boolean notifyPlayer(String user, Notification notification) {
@@ -118,6 +122,10 @@ public class NotificationService {
                 LOGGER.info("Notification for {} on channel {}: {}", user, emitter, notification);
                 emitter.send(notification, MediaType.APPLICATION_JSON);
                 sent = true;
+            } catch (IllegalStateException exception) {
+                LOGGER.info("Message send failed. Emitter is already set complete.");
+            } catch (IOException exception) {
+                LOGGER.info("An existing connection was forcibly closed by the remote host");
             } catch (Exception exception) {
                 LOGGER.warn("User {} is not available: {}", user, exception);
             }
