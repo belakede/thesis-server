@@ -10,11 +10,15 @@ import me.belakede.thesis.server.game.domain.NullPlayer;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.repository.PlayerRepository;
 import me.belakede.thesis.server.game.response.CurrentPlayerNotification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PlayerService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerService.class);
 
     private final PlayerRepository playerRepository;
     private final GameLogicService gameLogicService;
@@ -73,6 +77,7 @@ public class PlayerService {
         final NullPlayer nullPlayer = new NullPlayer();
         currentPlayer.addListener((observable, oldValue, newValue) -> {
             if (!nullPlayer.equals(newValue)) {
+                LOGGER.info("Current player is {}", newValue);
                 updateRepository(newValue);
                 broadcast(newValue.getUsername());
             }

@@ -90,7 +90,7 @@ public class NotificationService {
                 if (gameLogicService.gameInProgress() && !emitters.isEmpty()) {
                     LOGGER.debug("Sending heartbeat...");
                     broadcast(new HeartBeatNotification());
-                    sleepTime = 10 * 1000;
+                    sleepTime = 5 * 1000;
                 }
                 LOGGER.debug("Waiting {} seconds before next", sleepTime / 1000);
                 try {
