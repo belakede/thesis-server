@@ -53,10 +53,12 @@ public class AuthorServiceTest {
         authorService.create("user", null);
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void createShouldThrowDataIntegrityViolationExceptionWhenEntryAlreadyExistsWithTheSameAuthorAndRoom() {
-        entityManager.persist(new Author("user", "room"));
-        authorService.create("user", "room");
+    @Test
+    public void createShouldReturnTheAlreadyExistingAuthorInTheSameAuthorAndRoom() {
+        Author expected = new Author("user", "room");
+        entityManager.persist(expected);
+        Author actual = authorService.create("user", "room");
+        assertThat(actual, is(expected));
     }
 
     @Test(expected = MissingAuthorException.class)

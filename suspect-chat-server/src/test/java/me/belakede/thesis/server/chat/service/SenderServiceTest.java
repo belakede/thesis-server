@@ -53,10 +53,12 @@ public class SenderServiceTest {
         senderService.create("user", null);
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void createShouldThrowDataIntegrityViolationExceptionWhenEntryAlreadyExistsWithTheSameSenderAndRoom() {
-        entityManager.persist(new Sender("user", "room"));
-        senderService.create("user", "room");
+    @Test
+    public void createShouldReturnWithAlreadyExistingInTheSameSenderAndRoom() {
+        Sender expected = new Sender("user", "room");
+        entityManager.persist(expected);
+        Sender actual = senderService.create("user", "room");
+        assertThat(actual, is(expected));
     }
 
     @Test(expected = MissingSenderException.class)
