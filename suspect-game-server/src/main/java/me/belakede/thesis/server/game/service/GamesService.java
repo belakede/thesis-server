@@ -14,13 +14,13 @@ import java.io.IOException;
 import java.util.List;
 
 @Service
-public class LobbyService {
+public class GamesService {
 
     private final GameRepository gameRepository;
     private final GameConverter gameConverter;
 
     @Autowired
-    public LobbyService(GameRepository gameRepository, GameConverter gameConverter) {
+    public GamesService(GameRepository gameRepository, GameConverter gameConverter) {
         this.gameRepository = gameRepository;
         this.gameConverter = gameConverter;
     }

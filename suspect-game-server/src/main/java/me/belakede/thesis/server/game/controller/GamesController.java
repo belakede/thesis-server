@@ -8,7 +8,7 @@ import me.belakede.thesis.server.game.exception.GameIsAlreadyRunningException;
 import me.belakede.thesis.server.game.request.GamesRequest;
 import me.belakede.thesis.server.game.response.GamesResponse;
 import me.belakede.thesis.server.game.service.GameLogicService;
-import me.belakede.thesis.server.game.service.LobbyService;
+import me.belakede.thesis.server.game.service.GamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,18 +22,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/games")
 public class GamesController {
 
-    private final LobbyService lobbyService;
+    private final GamesService gamesService;
     private final GameLogicService gameLogicService;
 
     @Autowired
-    public GamesController(LobbyService lobbyService, GameLogicService gameLogicService) {
-        this.lobbyService = lobbyService;
+    public GamesController(GamesService gamesService, GameLogicService gameLogicService) {
+        this.gamesService = gamesService;
         this.gameLogicService = gameLogicService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
     public GamesResponse create(@RequestBody GamesRequest gamesRequest) {
-        Game game = lobbyService.create(gamesRequest.getBoardType(), new ArrayList<>(gamesRequest.getUsers()));
+        Game game = gamesService.create(gamesRequest.getBoardType(), new ArrayList<>(gamesRequest.getUsers()));
         return new GamesResponse(game.getId(), game.getRoom(), game.getBoardType(), Status.valueOf(game.getStatus().name()), game.getCreated(), createUsers(game.getPlayers()));
     }
 
@@ -42,12 +42,12 @@ public class GamesController {
         if (gameLogicService.gameInProgress()) {
             throw new GameIsAlreadyRunningException("A game is running. Please try later.");
         }
-        lobbyService.remove(id);
+        gamesService.remove(id);
     }
 
     @RequestMapping(method = RequestMethod.GET)
     public List<GamesResponse> games() {
-        return lobbyService.findAll().stream()
+        return gamesService.findAll().stream()
                 .map(g -> new GamesResponse(g.getId(), g.getRoom(), g.getBoardType(), Status.valueOf(g.getStatus().name()), g.getCreated(), createUsers(g.getPlayers())))
                 .collect(Collectors.toList());
     }
@@ -57,7 +57,7 @@ public class GamesController {
         if (gameLogicService.gameInProgress()) {
             throw new GameIsAlreadyRunningException("A game is running. Please try later.");
         }
-        Game game = lobbyService.findById(id);
+        Game game = gamesService.findById(id);
         gameLogicService.setGame(game);
     }
 
