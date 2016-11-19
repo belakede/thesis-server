@@ -7,7 +7,7 @@ import me.belakede.thesis.server.game.domain.Status;
 import me.belakede.thesis.server.game.exception.GameIsAlreadyRunningException;
 import me.belakede.thesis.server.game.request.GamesRequest;
 import me.belakede.thesis.server.game.response.GamesResponse;
-import me.belakede.thesis.server.game.service.GameLogicService;
+import me.belakede.thesis.server.game.service.GameService;
 import me.belakede.thesis.server.game.service.GamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 public class GamesController {
 
     private final GamesService gamesService;
-    private final GameLogicService gameLogicService;
+    private final GameService gameService;
 
     @Autowired
-    public GamesController(GamesService gamesService, GameLogicService gameLogicService) {
+    public GamesController(GamesService gamesService, GameService gameService) {
         this.gamesService = gamesService;
-        this.gameLogicService = gameLogicService;
+        this.gameService = gameService;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -39,7 +39,7 @@ public class GamesController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") Long id) {
-        if (gameLogicService.gameInProgress()) {
+        if (gameService.isRunning()) {
             throw new GameIsAlreadyRunningException("A game is running. Please try later.");
         }
         gamesService.remove(id);
@@ -54,11 +54,10 @@ public class GamesController {
 
     @RequestMapping(value = "/start/{id}", method = RequestMethod.POST)
     public void start(@PathVariable("id") Long id) {
-        if (gameLogicService.gameInProgress()) {
+        if (gameService.isRunning()) {
             throw new GameIsAlreadyRunningException("A game is running. Please try later.");
         }
-        Game game = gamesService.findById(id);
-        gameLogicService.setGame(game);
+        gameService.setGameEntity(gamesService.findById(id));
     }
 
     private Map<Suspect, String> createUsers(List<Player> players) {
