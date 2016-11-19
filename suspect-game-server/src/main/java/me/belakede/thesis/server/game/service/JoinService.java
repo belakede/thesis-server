@@ -21,7 +21,7 @@ class JoinService {
         this.playerService = playerService;
     }
 
-    public SseEmitter join(String username) {
+    SseEmitter join(String username) {
         LOGGER.info("{} tries to join to the game", username);
         if (!gameService.isRunning() && gameService.isAvailable()) {
             return playerService.join(username);
