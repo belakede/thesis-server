@@ -1,36 +1,42 @@
 package me.belakede.thesis.server.game.service;
 
 import me.belakede.thesis.game.field.Field;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class MoveService {
+class MoveService {
 
-    private final GameLogicService gameLogicService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(MoveService.class);
+
+    private final GameService gameService;
     private final PositionService positionService;
 
     @Autowired
-    public MoveService(GameLogicService gameLogicService, PositionService positionService) {
-        this.gameLogicService = gameLogicService;
+    public MoveService(GameService gameService, PositionService positionService) {
+        this.gameService = gameService;
         this.positionService = positionService;
     }
 
-    public void move(int row, int column) {
-        move(row, column);
-        update();
+    void move(int row, int column) {
+        moveCurrentPlayer(row, column);
+        updatePosition();
     }
 
     private void moveCurrentPlayer(int row, int column) {
-        gameLogicService.getGameLogic().move(getField(row, column));
+        Field field = getField(row, column);
+        LOGGER.debug("Move current player to {}", field);
+        gameService.getGameLogic().move(field);
     }
 
-    private void update() {
+    private void updatePosition() {
         positionService.update();
     }
 
     private Field getField(int row, int column) {
-        return gameLogicService.getGameLogic().getBoard().getField(row, column);
+        return gameService.getGameLogic().getBoard().getField(row, column);
     }
 
 }
