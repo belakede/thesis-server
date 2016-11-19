@@ -1,101 +1,145 @@
 package me.belakede.thesis.server.game.service;
 
-import me.belakede.thesis.game.equipment.Card;
-import me.belakede.thesis.game.equipment.Suspicion;
-import me.belakede.thesis.server.game.exception.MissingGameException;
-import me.belakede.thesis.server.game.response.Coordinate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import me.belakede.thesis.server.game.converter.GameConverter;
+import me.belakede.thesis.server.game.domain.Game;
+import me.belakede.thesis.server.game.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.security.Principal;
 
 @Service
 public class GameService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GameService.class);
-
-    private final GameLogicService gameLogicService;
-    private final JoinService joinService;
-    private final RollService rollService;
-    private final MoveService moveService;
-    private final SuspectService suspectService;
-    private final ShowService showService;
-    private final AccuseService accuseService;
-    private final PlayerService playerService;
+    private final ObjectProperty<me.belakede.thesis.game.Game> gameLogic = new SimpleObjectProperty<>();
+    private final ObjectProperty<me.belakede.thesis.server.game.domain.Game> gameEntity = new SimpleObjectProperty<>();
+    private final BooleanProperty running = new SimpleBooleanProperty();
+    private final BooleanProperty available = new SimpleBooleanProperty();
+    private final BooleanProperty inProgress = new SimpleBooleanProperty();
+    private final GameConverter gameConverter;
+    private final GameRepository gameRepository;
 
     @Autowired
-    public GameService(GameLogicService gameLogicService, JoinService joinService, RollService rollService, MoveService moveService, SuspectService suspectService, ShowService showService, AccuseService accuseService, PlayerService playerService) {
-        this.gameLogicService = gameLogicService;
-        this.joinService = joinService;
-        this.rollService = rollService;
-        this.moveService = moveService;
-        this.suspectService = suspectService;
-        this.showService = showService;
-        this.accuseService = accuseService;
-        this.playerService = playerService;
+    public GameService(GameConverter gameConverter, GameRepository gameRepository) {
+        this.gameConverter = gameConverter;
+        this.gameRepository = gameRepository;
+        hookupChangeListeners();
     }
 
-    public SseEmitter join(Principal principal) {
-        if (gameLogicService.gameInProgress()) {
-            LOGGER.info("Opening channel for {}", principal.getName());
-            SseEmitter emitter = joinService.join(principal.getName());
-            LOGGER.info("Emitter created for {}: ", principal.getName(), emitter);
-            return emitter;
-        }
-        throw new MissingGameException("There is no game which you could join!");
+    public boolean isRunning() {
+        return running.get();
     }
 
-    public void roll(Principal principal) {
-        if (isCurrentPlayer(principal)) {
-            rollService.roll();
-        }
+    void setRunning(boolean running) {
+        this.running.set(running);
     }
 
-    public void move(Principal principal, Coordinate coordinate) {
-        if (isCurrentPlayer(principal)) {
-            moveService.move(coordinate.getRow(), coordinate.getColumn());
-        }
+    public BooleanProperty runningProperty() {
+        return running;
     }
 
-    public void next(Principal principal) {
-        if (isCurrentPlayer(principal)) {
-            playerService.next();
-        }
+    boolean isAvailable() {
+        return available.get();
     }
 
-    public void suspect(Principal principal, Suspicion suspicion) {
-        if (isCurrentPlayer(principal)) {
-            suspectService.suspect(suspicion);
-        }
+    private void setAvailable(boolean available) {
+        this.available.set(available);
     }
 
-    public void show(Principal principal, Card card) {
-        if (isNextPlayer(principal)) {
-            showService.show(card);
-        }
+    BooleanProperty availableProperty() {
+        return available;
     }
 
-    public void accuse(Principal principal, Suspicion suspicion) {
-        if (isCurrentPlayer(principal)) {
-            accuseService.accuse(suspicion);
-        }
+    public BooleanProperty inProgressProperty() {
+        return inProgress;
     }
 
-    public void exit(Principal principal) {
-        if (isCurrentPlayer(principal)) {
-            joinService.exit(principal.getName());
+    me.belakede.thesis.game.Game getGameLogic() {
+        return gameLogic.get();
+    }
+
+    private void setGameLogic(me.belakede.thesis.game.Game gameLogic) {
+        this.gameLogic.set(gameLogic);
+    }
+
+    me.belakede.thesis.server.game.domain.Game getGameEntity() {
+        return gameEntity.get();
+    }
+
+    public void setGameEntity(me.belakede.thesis.server.game.domain.Game gameEntity) {
+        this.gameEntity.set(gameEntity);
+    }
+
+    void pauseTheGame() {
+        if (isRunning() && getGameEntity() != null) {
+            setStatus(Game.Status.PAUSED);
+            saveAndFlush();
+            clearGames();
         }
     }
 
-    private boolean isCurrentPlayer(Principal principal) {
-        return principal.getName().equals(playerService.getCurrentPlayer().getUsername());
+    void finishTheGame() {
+        if (isRunning()) {
+            setStatus(Game.Status.FINISHED);
+            saveAndFlush();
+            clearGames();
+        }
     }
 
-    private boolean isNextPlayer(Principal principal) {
-        return principal.getName().equals(playerService.getNextPlayer().getUsername());
+    private void hookupChangeListeners() {
+        gameLogicProperty().addListener((observable, oldValue, newValue) -> {
+            if (!isAvailable() && newValue != null && !isInProgress()) {
+                setInProgress(true);
+                setGameEntity(gameConverter.convert(newValue));
+                getGameEntity().setStatus(Game.Status.IN_PROGRESS);
+                gameRepository.save(getGameEntity());
+                setAvailable(true);
+                setInProgress(false);
+            }
+        });
+        gameEntityProperty().addListener((observable, oldValue, newValue) -> {
+            if (!isAvailable() && newValue != null && !isInProgress()) {
+                setInProgress(true);
+                setGameLogic(gameConverter.convert(newValue));
+                getGameEntity().setStatus(Game.Status.IN_PROGRESS);
+                gameRepository.save(getGameEntity());
+                setAvailable(true);
+                setInProgress(false);
+            }
+        });
+    }
+
+    private void setStatus(Game.Status status) {
+        getGameEntity().setStatus(status);
+    }
+
+    private void saveAndFlush() {
+        gameRepository.saveAndFlush(getGameEntity());
+    }
+
+    private void clearGames() {
+        setGameEntity(null);
+        setGameEntity(null);
+        setAvailable(false);
+        setRunning(false);
+    }
+
+    private ObjectProperty<me.belakede.thesis.game.Game> gameLogicProperty() {
+        return gameLogic;
+    }
+
+    private ObjectProperty<me.belakede.thesis.server.game.domain.Game> gameEntityProperty() {
+        return gameEntity;
+    }
+
+    private boolean isInProgress() {
+        return inProgress.get();
+    }
+
+    private void setInProgress(boolean inProgress) {
+        this.inProgress.set(inProgress);
     }
 
 }
