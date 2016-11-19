@@ -5,41 +5,67 @@ import javafx.beans.property.SimpleObjectProperty;
 import me.belakede.thesis.game.equipment.Suspicion;
 import me.belakede.thesis.server.game.response.ShowYourCardNotification;
 import me.belakede.thesis.server.game.response.SuspicionNotification;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SuspectService {
+class SuspectService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SuspectService.class);
+
+    private final ObjectProperty<Suspicion> suspicion = new SimpleObjectProperty<>();
+    private final GameService gameService;
     private final PlayerService playerService;
-    private final GameLogicService gameLogicService;
     private final PositionService positionService;
     private final NotificationService notificationService;
-    private final ObjectProperty<Suspicion> suspicionObjectProperty;
 
     @Autowired
-    public SuspectService(PlayerService playerService, GameLogicService gameLogicService, PositionService positionService, NotificationService notificationService) {
+    public SuspectService(GameService gameService, PlayerService playerService, PositionService positionService, NotificationService notificationService) {
+        this.gameService = gameService;
         this.playerService = playerService;
-        this.gameLogicService = gameLogicService;
         this.positionService = positionService;
         this.notificationService = notificationService;
-        this.suspicionObjectProperty = new SimpleObjectProperty<>();
         hookupChangeListeners();
     }
 
-    public void suspect(Suspicion suspicion) {
-        suspicionObjectProperty.setValue(suspicion);
+    void suspect(Suspicion suspicion) {
+        setSuspicion(suspicion);
     }
 
     private void hookupChangeListeners() {
-        suspicionObjectProperty.addListener((observable, oldValue, newValue) -> {
-            if (null != newValue) {
-                gameLogicService.getGameLogic().suspect(newValue);
-                notificationService.broadcast(new SuspicionNotification(newValue));
-                positionService.update();
-                notificationService.notify(playerService.getCurrentPlayer().getUsername(), new ShowYourCardNotification());
-            }
+        suspicionProperty().addListener((observable, oldValue, newValue) -> {
+            LOGGER.debug("Broadcasting suspicion: {}");
+            broadcastSuspicion(newValue);
+            updateGameLogic(newValue);
+            updatePositions();
+            LOGGER.debug("Sending show your card notification to next player.");
+            sendShowYourCardNotification();
         });
     }
 
+    private void sendShowYourCardNotification() {
+        notificationService.notify(playerService.getNextPlayer().getUsername(), new ShowYourCardNotification());
+    }
+
+    private void updatePositions() {
+        positionService.update();
+    }
+
+    private void broadcastSuspicion(Suspicion newValue) {
+        notificationService.broadcast(new SuspicionNotification(newValue));
+    }
+
+    private void updateGameLogic(Suspicion newValue) {
+        gameService.getGameLogic().suspect(newValue);
+    }
+
+    private ObjectProperty<Suspicion> suspicionProperty() {
+        return suspicion;
+    }
+
+    private void setSuspicion(Suspicion suspicion) {
+        this.suspicion.set(suspicion);
+    }
 }
