@@ -3,6 +3,7 @@ package me.belakede.thesis.server.game.service;
 import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.MapChangeListener;
 import javafx.collections.MapChangeListener.Change;
 import javafx.collections.ObservableMap;
 import me.belakede.thesis.game.equipment.Figurine;
@@ -41,13 +42,26 @@ class PositionService {
     }
 
     private void hookupChangeListeners() {
-        getPositions().addListener((Change<? extends Figurine, ? extends Position> change) -> {
+        gameService.runningProperty().addListener((observable, oldValue, newValue) -> {
+            MapChangeListener<Figurine, Position> positionMapChangeListener = createFigurinePositionMapChangeListener();
+            if (newValue) {
+                fetchUpdates();
+                getPositions().addListener(positionMapChangeListener);
+            } else {
+                getPositions().removeListener(positionMapChangeListener);
+                positions.clear();
+            }
+        });
+    }
+
+    private MapChangeListener<Figurine, Position> createFigurinePositionMapChangeListener() {
+        return (Change<? extends Figurine, ? extends Position> change) -> {
             if (change.wasAdded()) {
                 Position position = positionRepository.save(change.getValueAdded());
                 LOGGER.debug("{} position has been changed to {}", change.getKey(), change.getValueAdded());
                 notificationService.broadcast(positionConverter.convert(position));
             }
-        });
+        };
     }
 
     private ObservableMap<Figurine, Position> getPositions() {
@@ -60,10 +74,18 @@ class PositionService {
 
     private void fetchUpdates() {
         gameService.getGameLogic().getPositions().forEach((figurine, field) -> {
-            Position position = positions.containsKey(figurine)
-                    ? changePosition(figurine, field)
-                    : positionConverter.convert(figurine, field);
-            positions.put(figurine, position);
+            LOGGER.info("{} position changed to {}", figurine, field);
+            Position position = positions.get(figurine);
+            if (position == null || position.getRowIndex() != field.getRow() || position.getColumnIndex() != field.getColumn()) {
+                Position newPosition = positionConverter.convert(figurine, field);
+                LOGGER.info("The figurine not on board, or it is on a new positions: {}", newPosition);
+                newPosition.setGame(gameService.getGameEntity());
+                positions.put(figurine, newPosition);
+                if (position != null) {
+                    LOGGER.info("The figurine already was on the board. So we will delete the old position.");
+                    positionRepository.delete(position);
+                }
+            }
         });
     }
 
