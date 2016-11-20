@@ -6,9 +6,13 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import me.belakede.thesis.server.game.converter.GameConverter;
 import me.belakede.thesis.server.game.domain.Game;
+import me.belakede.thesis.server.game.domain.Position;
 import me.belakede.thesis.server.game.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Service
 public class GameService {
@@ -36,7 +40,12 @@ public class GameService {
         this.running.set(running);
     }
 
-    public BooleanProperty runningProperty() {
+    void updatePositions(Collection<Position> positions) {
+        getGameEntity().setPositions(new ArrayList<>(positions));
+        gameRepository.save(getGameEntity());
+    }
+
+    BooleanProperty runningProperty() {
         return running;
     }
 

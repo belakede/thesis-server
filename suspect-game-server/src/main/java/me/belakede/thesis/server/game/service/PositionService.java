@@ -5,8 +5,6 @@ import javafx.beans.property.MapProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.MapChangeListener;
-import javafx.collections.MapChangeListener.Change;
 import javafx.collections.ObservableMap;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.game.field.Field;
@@ -63,26 +61,13 @@ class PositionService {
 
     private void hookupChangeListeners() {
         gameService.runningProperty().addListener((observable, oldValue, newValue) -> {
-            MapChangeListener<Figurine, Position> positionMapChangeListener = createFigurinePositionMapChangeListener();
             if (newValue) {
                 fetchUpdates();
-                getPositions().addListener(positionMapChangeListener);
             } else {
-                getPositions().removeListener(positionMapChangeListener);
                 positionsProperty().clear();
             }
             setInitialized(newValue);
         });
-    }
-
-    private MapChangeListener<Figurine, Position> createFigurinePositionMapChangeListener() {
-        return (Change<? extends Figurine, ? extends Position> change) -> {
-            if (change.wasAdded() && isInitialized()) {
-                Position position = positionRepository.save(change.getValueAdded());
-                LOGGER.debug("{} position has been changed to {}", change.getKey(), change.getValueAdded());
-                notificationService.broadcast(positionConverter.convert(position));
-            }
-        };
     }
 
     private ObservableMap<Figurine, Position> getPositions() {
@@ -96,24 +81,20 @@ class PositionService {
     private void fetchUpdates() {
         gameService.getGameLogic().getPositions().forEach((figurine, field) -> {
             LOGGER.info("{} position changed to {}", figurine, field);
-            Position position = positions.get(figurine);
-            if (position == null || position.getRowIndex() != field.getRow() || position.getColumnIndex() != field.getColumn()) {
-                Position newPosition = positionConverter.convert(figurine, field);
-                LOGGER.info("The figurine not on board, or it is on a new positions: {}", newPosition);
-                newPosition.setGame(gameService.getGameEntity());
-                positions.put(figurine, newPosition);
-                if (position != null) {
-                    LOGGER.info("The figurine already was on the board. So we will delete the old position.");
-                    positionRepository.delete(position);
-                }
-            }
+            Position position = changePosition(figurine, field);
+            position = positionRepository.save(position);
+            notificationService.broadcast(positionConverter.convert(position));
+            positions.put(figurine, position);
+            gameService.updatePositions(positions.values());
         });
     }
 
     private Position changePosition(Figurine figurine, Field field) {
         Position position;
         position = positions.get(figurine);
-        if (!position.isIdentical(field)) {
+        if (position == null) {
+            position = new Position(figurine.name(), gameService.getGameEntity(), field.getRow(), field.getColumn());
+        } else if (!position.isIdentical(field)) {
             position.setRowIndex(field.getRow());
             position.setColumnIndex(field.getColumn());
         }
