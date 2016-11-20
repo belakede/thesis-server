@@ -18,17 +18,19 @@ public class GameManager {
     private final RollService rollService;
     private final MoveService moveService;
     private final ShowService showService;
+    private final NextService nextService;
     private final AccuseService accuseService;
     private final PlayerService playerService;
     private final SuspectService suspectService;
 
     @Autowired
-    public GameManager(ExitService exitService, JoinService joinService, RollService rollService, MoveService moveService, ShowService showService, AccuseService accuseService, PlayerService playerService, SuspectService suspectService, HeartbeatService heartbeatService) {
+    public GameManager(ExitService exitService, JoinService joinService, RollService rollService, MoveService moveService, ShowService showService, NextService nextService, AccuseService accuseService, PlayerService playerService, SuspectService suspectService, HeartbeatService heartbeatService) {
         this.exitService = exitService;
         this.joinService = joinService;
         this.rollService = rollService;
         this.moveService = moveService;
         this.showService = showService;
+        this.nextService = nextService;
         this.accuseService = accuseService;
         this.playerService = playerService;
         this.suspectService = suspectService;
@@ -64,7 +66,7 @@ public class GameManager {
 
     public void next(Principal principal) {
         if (isCurrentPlayer(principal)) {
-            playerService.next();
+            nextService.next();
         }
     }
 
