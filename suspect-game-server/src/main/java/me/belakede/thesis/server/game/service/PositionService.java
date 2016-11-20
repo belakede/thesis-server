@@ -1,6 +1,8 @@
 package me.belakede.thesis.server.game.service;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.MapProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleMapProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.MapChangeListener;
@@ -22,6 +24,7 @@ class PositionService {
     private static final Logger LOGGER = LoggerFactory.getLogger(PositionService.class);
 
     private final MapProperty<Figurine, Position> positions = new SimpleMapProperty<>();
+    private final BooleanProperty initialized = new SimpleBooleanProperty();
     private final GameService gameService;
     private final PositionConverter positionConverter;
     private final PositionRepository positionRepository;
@@ -33,12 +36,29 @@ class PositionService {
         this.positionConverter = positionConverter;
         this.positionRepository = positionRepository;
         this.notificationService = notificationService;
+        setInitialized(false);
         setPositions(FXCollections.observableHashMap());
         hookupChangeListeners();
     }
 
     void update() {
         fetchUpdates();
+    }
+
+    public boolean isInitialized() {
+        return initialized.get();
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized.set(initialized);
+    }
+
+    public BooleanProperty initializedProperty() {
+        return initialized;
+    }
+
+    public MapProperty<Figurine, Position> positionsProperty() {
+        return positions;
     }
 
     private void hookupChangeListeners() {
@@ -49,14 +69,15 @@ class PositionService {
                 getPositions().addListener(positionMapChangeListener);
             } else {
                 getPositions().removeListener(positionMapChangeListener);
-                positions.clear();
+                positionsProperty().clear();
             }
+            setInitialized(newValue);
         });
     }
 
     private MapChangeListener<Figurine, Position> createFigurinePositionMapChangeListener() {
         return (Change<? extends Figurine, ? extends Position> change) -> {
-            if (change.wasAdded()) {
+            if (change.wasAdded() && isInitialized()) {
                 Position position = positionRepository.save(change.getValueAdded());
                 LOGGER.debug("{} position has been changed to {}", change.getKey(), change.getValueAdded());
                 notificationService.broadcast(positionConverter.convert(position));
