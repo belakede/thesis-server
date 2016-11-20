@@ -78,7 +78,7 @@ class PlayerService {
     }
 
     void next() {
-        setCurrentPlayer(getNextPlayer());
+        setCurrentPlayer(getPlayers().get(gameService.getGameLogic().getCurrentPlayer().getFigurine()));
     }
 
     void kill() {
