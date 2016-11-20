@@ -105,7 +105,7 @@ class NotificationService {
         if (emitters.containsKey(user)) {
             try {
                 SseEmitter emitter = emitters.get(user);
-                LOGGER.info("Notification for {}: {}", user, notification);
+                LOGGER.debug("Notification for {}: {}", user, notification);
                 emitter.send(notification, MediaType.APPLICATION_JSON);
                 sent = true;
             } catch (Exception exception) {
