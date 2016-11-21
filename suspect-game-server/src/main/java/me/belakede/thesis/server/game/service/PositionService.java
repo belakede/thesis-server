@@ -82,8 +82,6 @@ class PositionService {
         gameService.getGameLogic().getPositions().forEach((figurine, field) -> {
             LOGGER.info("{} position changed to {}", figurine, field);
             Position position = changePosition(figurine, field);
-            position = positionRepository.save(position);
-            notificationService.broadcast(positionConverter.convert(position));
             positions.put(figurine, position);
             gameService.updatePositions(positions.values());
         });
@@ -97,7 +95,8 @@ class PositionService {
         } else if (!position.isIdentical(field)) {
             position.setRowIndex(field.getRow());
             position.setColumnIndex(field.getColumn());
+            notificationService.broadcast(positionConverter.convert(position));
         }
-        return position;
+        return positionRepository.save(position);
     }
 }
