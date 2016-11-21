@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -78,7 +79,10 @@ class PlayerService {
     }
 
     void next() {
-        setCurrentPlayer(getPlayers().get(gameService.getGameLogic().getCurrentPlayer().getFigurine()));
+        Suspect newCurrentPlayer = gameService.getGameLogic().getCurrentPlayer().getFigurine();
+        Player currentPlayer = getPlayers().get(newCurrentPlayer);
+        updateRepository(currentPlayer);
+        setCurrentPlayer(currentPlayer);
     }
 
     void kill() {
@@ -157,7 +161,6 @@ class PlayerService {
         });
         currentPlayerProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
-                updateRepository(newValue);
                 broadcastCurrentPlayer();
             }
         });
@@ -208,9 +211,10 @@ class PlayerService {
 
     private void initCurrentPlayer() {
         Optional<Player> player = getPlayers().values().stream().filter(Player::isCurrent).findFirst();
-        if (player.isPresent()) {
+        if (!player.isPresent()) {
             player = getPlayers().values().stream().min((o1, o2) -> o1.getOrdinalNumber().compareTo(o2.getOrdinalNumber()));
         }
+        gameService.setCurrent(player.get().getFigurine());
         setCurrentPlayer(player.get());
     }
 
@@ -232,6 +236,7 @@ class PlayerService {
 
     private void updateRepository(Player currentPlayer) {
         getPlayers().values().forEach(p -> p.setCurrent(p.equals(currentPlayer)));
+        gameService.getGameEntity().setPlayers(new ArrayList<>(getPlayers().values()));
         playerRepository.save(getPlayers().values());
     }
 
