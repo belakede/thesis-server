@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import me.belakede.thesis.game.Game;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.game.equipment.Suspect;
 import me.belakede.thesis.server.game.converter.GameConverter;
@@ -65,6 +66,19 @@ class PlayerService {
 
     Player getNextPlayer() {
         return getPlayers().get(getNextFigurine());
+    }
+
+    public String getWinner() {
+        String result = null;
+        Game gameLogic = gameService.getGameLogic();
+        if (gameLogic.isGameEnded()) {
+            if (gameLogic.getCurrentPlayer().hasBeenMadeGroundlessAccusation()) {
+                result = getNextPlayer().getUsername();
+            } else {
+                result = getCurrentPlayer().getUsername();
+            }
+        }
+        return result;
     }
 
     SseEmitter join(String username) {

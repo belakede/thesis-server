@@ -74,7 +74,7 @@ class AccuseService {
     }
 
     private void broadcastGameIsEnded() {
-        notificationService.broadcast(new GameEndedNotification());
+        notificationService.broadcast(new GameEndedNotification(playerService.getWinner()));
     }
 
     private void finishGame() {
