@@ -5,6 +5,7 @@ import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Player;
 import me.belakede.thesis.server.game.domain.Status;
 import me.belakede.thesis.server.game.exception.GameIsAlreadyRunningException;
+import me.belakede.thesis.server.game.exception.InvalidGameException;
 import me.belakede.thesis.server.game.request.GamesRequest;
 import me.belakede.thesis.server.game.response.GamesResponse;
 import me.belakede.thesis.server.game.service.GameService;
@@ -57,7 +58,11 @@ public class GamesController {
         if (gameService.isRunning()) {
             throw new GameIsAlreadyRunningException("A game is running. Please try later.");
         }
-        gameService.setGameEntity(gamesService.findById(id));
+        Game game = gamesService.findById(id);
+        if (Game.Status.FINISHED.equals(game.getStatus())) {
+            throw new InvalidGameException("The selected game is already finished.");
+        }
+        gameService.setGameEntity(game);
     }
 
     private Map<Suspect, String> createUsers(List<Player> players) {
