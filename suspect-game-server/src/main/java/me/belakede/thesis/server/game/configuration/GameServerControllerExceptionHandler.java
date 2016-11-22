@@ -13,7 +13,7 @@ public class GameServerControllerExceptionHandler {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler({MissingBoardException.class, MissingGameException.class, GameIsAlreadyRunningException.class,
-            InvalidPlayerConfiguration.class, ItIsNotYourTurnException.class})
+            InvalidPlayerConfiguration.class, ItIsNotYourTurnException.class, InvalidGameException.class})
     public String handleException(Exception e) {
         return e.getClass() + ": " + e.getMessage();
     }
