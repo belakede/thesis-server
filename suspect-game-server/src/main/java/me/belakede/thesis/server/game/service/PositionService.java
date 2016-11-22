@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableMap;
 import me.belakede.thesis.game.equipment.Figurine;
 import me.belakede.thesis.game.field.Field;
+import me.belakede.thesis.internal.game.util.Figurines;
 import me.belakede.thesis.server.game.converter.PositionConverter;
 import me.belakede.thesis.server.game.domain.Position;
 import me.belakede.thesis.server.game.repository.PositionRepository;
@@ -85,6 +86,9 @@ class PositionService {
             positions.put(figurine, position);
             gameService.updatePositions(positions.values());
         });
+        if (positions.size() != Figurines.values().size()) {
+            LOGGER.error("Some figurines are missing: {} -> {}", Figurines.values(), positions.keySet());
+        }
     }
 
     private Position changePosition(Figurine figurine, Field field) {
