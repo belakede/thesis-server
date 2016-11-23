@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import me.belakede.thesis.game.equipment.Suspect;
 import me.belakede.thesis.server.game.converter.GameConverter;
+import me.belakede.thesis.server.game.domain.Action;
 import me.belakede.thesis.server.game.domain.Game;
 import me.belakede.thesis.server.game.domain.Position;
 import me.belakede.thesis.server.game.repository.GameRepository;
@@ -102,6 +103,15 @@ public class GameService {
         while (!getGameLogic().getCurrentPlayer().getFigurine().equals(figurine)) {
             getGameLogic().next();
         }
+    }
+
+    void changeLastAction(Action action) {
+        getGameEntity().setLastAction(action);
+        gameRepository.save(getGameEntity());
+    }
+
+    Action getLastAction() {
+        return getGameEntity().getLastAction();
     }
 
     private void hookupChangeListeners() {
