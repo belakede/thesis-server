@@ -33,6 +33,10 @@ public class Game implements Serializable {
     @Column(nullable = false)
     private Status status;
 
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Action lastAction;
+
     @OneToOne(mappedBy = "game", orphanRemoval = true, cascade = CascadeType.ALL)
     private Mystery mystery;
 
@@ -100,6 +104,14 @@ public class Game implements Serializable {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public Action getLastAction() {
+        return lastAction;
+    }
+
+    public void setLastAction(Action lastAction) {
+        this.lastAction = lastAction;
     }
 
     public Mystery getMystery() {
