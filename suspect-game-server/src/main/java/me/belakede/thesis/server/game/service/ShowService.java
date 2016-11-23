@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener.Change;
 import javafx.collections.ObservableList;
 import me.belakede.thesis.game.equipment.Card;
+import me.belakede.thesis.server.game.domain.Action;
 import me.belakede.thesis.server.game.response.CardNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +19,13 @@ class ShowService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShowService.class);
 
     private final ListProperty<Card> cards = new SimpleListProperty<>();
+    private final GameService gameService;
     private final PlayerService playerService;
     private final NotificationService notificationService;
 
     @Autowired
-    public ShowService(PlayerService playerService, NotificationService notificationService) {
+    public ShowService(GameService gameService, PlayerService playerService, NotificationService notificationService) {
+        this.gameService = gameService;
         this.playerService = playerService;
         this.notificationService = notificationService;
         setCards(FXCollections.observableArrayList());
@@ -31,6 +34,7 @@ class ShowService {
 
     void show(Card card) {
         addCard(card);
+        gameService.changeLastAction(Action.SHOW);
     }
 
     public ObservableList<Card> getCards() {

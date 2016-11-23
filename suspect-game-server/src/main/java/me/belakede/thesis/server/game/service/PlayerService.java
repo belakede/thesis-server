@@ -200,7 +200,8 @@ class PlayerService {
     }
 
     private void broadcastCurrentPlayer() {
-        notificationService.broadcast(new CurrentPlayerNotification(getCurrentPlayer().getUsername(), getNextPlayer().getUsername()));
+        Notification notification = new CurrentPlayerNotification(getCurrentPlayer().getUsername(), getNextPlayer().getUsername(), gameService.getLastAction());
+        notificationService.broadcast(notification);
     }
 
     private void pauseGame() {
@@ -252,6 +253,7 @@ class PlayerService {
         getPlayers().values().forEach(p -> p.setCurrent(p.equals(currentPlayer)));
         gameService.getGameEntity().setPlayers(new ArrayList<>(getPlayers().values()));
         playerRepository.save(getPlayers().values());
+        gameService.changeLastAction(null);
     }
 
     private Player updatePlayer(Player player) {

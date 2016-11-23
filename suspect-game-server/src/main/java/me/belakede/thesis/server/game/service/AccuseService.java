@@ -3,6 +3,7 @@ package me.belakede.thesis.server.game.service;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import me.belakede.thesis.game.equipment.Suspicion;
+import me.belakede.thesis.server.game.domain.Action;
 import me.belakede.thesis.server.game.response.AccusationNotification;
 import me.belakede.thesis.server.game.response.GameEndedNotification;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ class AccuseService {
 
     void accuse(Suspicion suspicion) {
         setSuspicion(suspicion);
+        gameService.changeLastAction(Action.ACCUSE);
     }
 
     private void hookupChangeListeners() {

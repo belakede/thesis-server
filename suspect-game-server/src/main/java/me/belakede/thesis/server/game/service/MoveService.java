@@ -1,6 +1,7 @@
 package me.belakede.thesis.server.game.service;
 
 import me.belakede.thesis.game.field.Field;
+import me.belakede.thesis.server.game.domain.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ class MoveService {
     void move(int row, int column) {
         moveCurrentPlayer(row, column);
         updatePosition();
+        gameService.changeLastAction(Action.MOVE);
     }
 
     private void moveCurrentPlayer(int row, int column) {

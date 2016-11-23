@@ -3,6 +3,7 @@ package me.belakede.thesis.server.game.service;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import me.belakede.thesis.game.equipment.PairOfDice;
+import me.belakede.thesis.server.game.domain.Action;
 import me.belakede.thesis.server.game.response.PairOfDiceNotification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ class RollService {
 
     void roll() {
         setPairOfDice(gameService.getGameLogic().roll());
+        gameService.changeLastAction(Action.ROLL);
     }
 
     private ObjectProperty<PairOfDice> pairOfDiceProperty() {
