@@ -62,7 +62,7 @@ public class GameController {
 
     @RequestMapping(value = "/show", method = RequestMethod.POST)
     public void show(Principal principal, @RequestBody ShowRequest showRequest) {
-        gameManager.show(principal, Cards.valueOf(showRequest.getCard()).get());
+        gameManager.show(principal, Cards.valueOf(showRequest.getCard()));
     }
 
     @RequestMapping(value = "/accuse", method = RequestMethod.POST)

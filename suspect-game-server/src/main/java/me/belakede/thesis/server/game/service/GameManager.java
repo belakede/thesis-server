@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.security.Principal;
+import java.util.Optional;
 import java.util.Timer;
 
 @Service
@@ -76,9 +77,9 @@ public class GameManager {
         }
     }
 
-    public void show(Principal principal, Card card) {
+    public void show(Principal principal, Optional<Card> card) {
         if (isNextPlayer(principal)) {
-            showService.show(card);
+            showService.show(card.orElse(null));
         }
 
     }

@@ -1,7 +1,10 @@
 package me.belakede.thesis.server.game.service;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
 import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.server.game.response.CardNotification;
 import org.slf4j.Logger;
@@ -14,7 +17,7 @@ class ShowService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShowService.class);
 
-    private final ObjectProperty<Card> card = new SimpleObjectProperty<>();
+    private final ListProperty<Card> cards = new SimpleListProperty<>();
     private final PlayerService playerService;
     private final NotificationService notificationService;
 
@@ -22,30 +25,47 @@ class ShowService {
     public ShowService(PlayerService playerService, NotificationService notificationService) {
         this.playerService = playerService;
         this.notificationService = notificationService;
+        setCards(FXCollections.observableArrayList());
         hookupChangeListeners();
     }
 
     void show(Card card) {
-        setCard(card);
+        addCard(card);
     }
 
-    private ObjectProperty<Card> cardProperty() {
-        return card;
+    public ObservableList<Card> getCards() {
+        return cards.get();
     }
 
-    private void setCard(Card card) {
-        this.card.set(card);
+    public void setCards(ObservableList<Card> cards) {
+        this.cards.set(cards);
+    }
+
+    public ListProperty<Card> cardsProperty() {
+        return cards;
+    }
+
+    private void addCard(Card card) {
+        getCards().add(card);
     }
 
     private void hookupChangeListeners() {
-        cardProperty().addListener((observable, oldValue, newValue) -> {
-            LOGGER.debug("Shown card: {}", newValue);
-            if (null != newValue) {
-                broadcastShowing(newValue);
-            } else {
-                broadcastNotShowing();
+        cardsProperty().addListener((Change<? extends Card> change) -> {
+            LOGGER.debug("Shown cards change: {}", change);
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().forEach(this::broadcast);
+                }
             }
         });
+    }
+
+    private void broadcast(Card card) {
+        if (card == null) {
+            broadcastNotShowing();
+        } else {
+            broadcastShowing(card);
+        }
     }
 
     private void broadcastNotShowing() {
