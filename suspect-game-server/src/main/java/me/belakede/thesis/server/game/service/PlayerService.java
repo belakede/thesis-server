@@ -200,7 +200,7 @@ class PlayerService {
     }
 
     private void broadcastCurrentPlayer() {
-        notificationService.broadcast(new CurrentPlayerNotification(getCurrentPlayer().getUsername()));
+        notificationService.broadcast(new CurrentPlayerNotification(getCurrentPlayer().getUsername(), getNextPlayer().getUsername()));
     }
 
     private void pauseGame() {
