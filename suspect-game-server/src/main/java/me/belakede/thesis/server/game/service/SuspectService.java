@@ -32,8 +32,10 @@ class SuspectService {
     }
 
     void suspect(Suspicion suspicion) {
-        setSuspicion(suspicion);
-        gameService.changeLastAction(Action.SUSPECT);
+        if (!Action.SUSPECT.equals(gameService.getLastAction())) {
+            setSuspicion(suspicion);
+            gameService.changeLastAction(Action.SUSPECT);
+        }
     }
 
     private void hookupChangeListeners() {

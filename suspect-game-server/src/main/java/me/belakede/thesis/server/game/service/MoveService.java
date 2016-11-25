@@ -22,9 +22,11 @@ class MoveService {
     }
 
     void move(int row, int column) {
-        moveCurrentPlayer(row, column);
-        updatePosition();
-        gameService.changeLastAction(Action.MOVE);
+        if (!gameService.getLastAction().equals(Action.MOVE)) {
+            moveCurrentPlayer(row, column);
+            updatePosition();
+            gameService.changeLastAction(Action.MOVE);
+        }
     }
 
     private void moveCurrentPlayer(int row, int column) {

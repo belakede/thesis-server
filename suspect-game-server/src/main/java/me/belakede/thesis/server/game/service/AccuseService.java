@@ -32,8 +32,10 @@ class AccuseService {
     }
 
     void accuse(Suspicion suspicion) {
-        setSuspicion(suspicion);
-        gameService.changeLastAction(Action.ACCUSE);
+        if (!gameService.getLastAction().equals(Action.ACCUSE)) {
+            setSuspicion(suspicion);
+            gameService.changeLastAction(Action.ACCUSE);
+        }
     }
 
     private void hookupChangeListeners() {

@@ -33,8 +33,10 @@ class ShowService {
     }
 
     void show(Card card) {
-        addCard(card);
-        gameService.changeLastAction(Action.SHOW);
+        if (!gameService.getLastAction().equals(Action.SHOW)) {
+            addCard(card);
+            gameService.changeLastAction(Action.SHOW);
+        }
     }
 
     public ObservableList<Card> getCards() {
