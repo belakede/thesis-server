@@ -1,0 +1,5 @@
+logging:
+  level:
+    root: WARN
+    me.belakede.thesis: WARN
+    org.springframework: WARN
