@@ -1,7 +1,10 @@
 package me.belakede.thesis.server.game.service;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.ListProperty;
+import javafx.beans.property.SimpleListProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
 import me.belakede.thesis.game.equipment.Suspicion;
 import me.belakede.thesis.server.game.domain.Action;
 import me.belakede.thesis.server.game.response.ShowYourCardNotification;
@@ -16,7 +19,7 @@ class SuspectService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SuspectService.class);
 
-    private final ObjectProperty<Suspicion> suspicion = new SimpleObjectProperty<>();
+    private final ListProperty<Suspicion> suspicion = new SimpleListProperty<>();
     private final GameService gameService;
     private final PlayerService playerService;
     private final PositionService positionService;
@@ -28,24 +31,32 @@ class SuspectService {
         this.playerService = playerService;
         this.positionService = positionService;
         this.notificationService = notificationService;
+        setSuspicion(FXCollections.observableArrayList());
         hookupChangeListeners();
     }
 
     void suspect(Suspicion suspicion) {
         if (!Action.SUSPECT.equals(gameService.getLastAction())) {
-            setSuspicion(suspicion);
+            addSuspicion(suspicion);
             gameService.changeLastAction(Action.SUSPECT);
         }
     }
 
     private void hookupChangeListeners() {
-        suspicionProperty().addListener((observable, oldValue, newValue) -> {
-            LOGGER.debug("Broadcasting suspicion: {}");
-            broadcastSuspicion(newValue);
-            updateGameLogic(newValue);
-            updatePositions();
-            LOGGER.debug("Sending show your card notification to next player.");
-            sendShowYourCardNotification();
+        suspicionProperty().addListener((Change<? extends Suspicion> change) -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    change.getAddedSubList().forEach(newValue -> {
+                        LOGGER.debug("Broadcasting suspicion: {}");
+                        broadcastSuspicion(newValue);
+                        updateGameLogic(newValue);
+                        updatePositions();
+                        LOGGER.debug("Sending show your card notification to next player.");
+                        sendShowYourCardNotification();
+                    });
+                }
+            }
+            suspicionProperty().clear();
         });
     }
 
@@ -65,11 +76,19 @@ class SuspectService {
         gameService.getGameLogic().suspect(newValue);
     }
 
-    private ObjectProperty<Suspicion> suspicionProperty() {
+    public ObservableList<Suspicion> getSuspicion() {
+        return suspicion.get();
+    }
+
+    private void setSuspicion(ObservableList<Suspicion> suspicion) {
+        this.suspicion.set(suspicion);
+    }
+
+    private ListProperty<Suspicion> suspicionProperty() {
         return suspicion;
     }
 
-    private void setSuspicion(Suspicion suspicion) {
-        this.suspicion.set(suspicion);
+    private void addSuspicion(Suspicion suspicion) {
+        getSuspicion().add(suspicion);
     }
 }
