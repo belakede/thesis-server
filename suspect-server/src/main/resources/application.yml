@@ -4,5 +4,5 @@ spring:
 logging:
   level:
     root: WARN
-    me.belakede.thesis: WARN
+    me.belakede.thesis: INFO
     org.springframework: WARN
