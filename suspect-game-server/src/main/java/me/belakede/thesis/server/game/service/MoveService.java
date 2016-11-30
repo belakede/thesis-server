@@ -22,7 +22,7 @@ class MoveService {
     }
 
     void move(int row, int column) {
-        if (!gameService.getLastAction().equals(Action.MOVE)) {
+        if (!Action.MOVE.equals(gameService.getLastAction())) {
             moveCurrentPlayer(row, column);
             updatePosition();
             gameService.changeLastAction(Action.MOVE);

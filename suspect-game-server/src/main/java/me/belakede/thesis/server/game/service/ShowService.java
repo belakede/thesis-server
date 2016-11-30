@@ -33,7 +33,7 @@ class ShowService {
     }
 
     void show(Card card) {
-        if (!gameService.getLastAction().equals(Action.SHOW)) {
+        if (!Action.SHOW.equals(gameService.getLastAction())) {
             addCard(card);
             gameService.changeLastAction(Action.SHOW);
         }
