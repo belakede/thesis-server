@@ -2,10 +2,10 @@ package me.belakede.thesis.server.ui;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -27,12 +27,23 @@ public class ServerUiController implements Initializable {
     @FXML
     private MasterDetailPane masterDetailPane;
     @FXML
+    private Button logsButton;
+    @FXML
+    private ChoiceBox language;
+    @FXML
     private TextArea logArea;
     private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         hookupChangeListeners();
+        setupLanguageBox();
+    }
+
+    private void setupLanguageBox() {
+        language.getItems().addAll(Language.values());
+        language.setConverter(new LanguageStringConverter());
+        language.getSelectionModel().select(Language.ENGLISH);
     }
 
     private void hookupChangeListeners() {
@@ -53,14 +64,13 @@ public class ServerUiController implements Initializable {
         });
     }
 
-    public void toggleLogs(ActionEvent actionEvent) {
-        Button button = (Button) actionEvent.getSource();
+    public void toggleLogs() {
         if (masterDetailPane.isShowDetailNode()) {
             stage.setHeight(225);
-            button.setText("Show logs");
+            logsButton.setText("Show logs");
         } else {
             stage.setHeight(600);
-            button.setText("Hide logs");
+            logsButton.setText("Hide logs");
         }
         masterDetailPane.setShowDetailNode(!masterDetailPane.isShowDetailNode());
     }

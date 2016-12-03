@@ -4,6 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.MasterDetailPane?>
+<?import org.controlsfx.control.ToggleSwitch?>
 <?import org.controlsfx.glyphfont.Glyph?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="me.belakede.thesis.server.ui.ServerUiController"
             fx:id="parent" stylesheets="@css/server-ui.css">
@@ -23,8 +24,9 @@
                            GridPane.columnSpan="4"/>
                     <Label text="Server Port" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                     <TextField fx:id="serverPort" text="8080" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                    <Label text="Language" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                    <ChoiceBox fx:id="langauge" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    <Label text="Debug mode" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <ToggleSwitch fx:id="loggingLevel" GridPane.columnIndex="3" GridPane.rowIndex="1"
+                                  GridPane.halignment="LEFT"/>
                     <Label text="Heartbeat settings" styleClass="title" GridPane.columnIndex="0" GridPane.rowIndex="2"
                            GridPane.columnSpan="4"/>
                     <Label text="Delay" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP"/>
@@ -43,11 +45,12 @@
                 <masterNode>
                     <AnchorPane>
                         <HBox styleClass="actions" AnchorPane.leftAnchor="0">
-                            <Button text="Show logs" onAction="#toggleLogs">
+                            <Button fx:id="logsButton" text="Show logs" onAction="#toggleLogs">
                                 <graphic>
                                     <Glyph fontFamily="FontAwesome" icon="PENCIL_SQUARE_ALT"/>
                                 </graphic>
                             </Button>
+                            <ChoiceBox fx:id="language"/>
                         </HBox>
                         <HBox styleClass="actions" AnchorPane.rightAnchor="0">
                             <Button text="Start" fx:id="startButton" onAction="#startServer">
