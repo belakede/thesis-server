@@ -81,3 +81,11 @@
     -fx-max-height: 375;
     -fx-font-family: monospace;
 }
+
+Label {
+    -fx-text-fill: #717171;
+}
+
+.title {
+    -fx-text-fill: #000000;
+}

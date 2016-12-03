@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.MasterDetailPane?>
@@ -14,7 +15,25 @@
                 </VBox>
             </left>
             <center>
-
+                <GridPane hgap="10" vgap="10">
+                    <padding>
+                        <Insets top="12.5" right="12.5" bottom="12.5" left="12.5"/>
+                    </padding>
+                    <Label text="General settings" styleClass="title" GridPane.columnIndex="0" GridPane.rowIndex="0"
+                           GridPane.columnSpan="4"/>
+                    <Label text="Server Port" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <TextField fx:id="serverPort" text="8080" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                    <Label text="Language" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <ChoiceBox fx:id="langauge" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                    <Label text="Heartbeat settings" styleClass="title" GridPane.columnIndex="0" GridPane.rowIndex="2"
+                           GridPane.columnSpan="4"/>
+                    <Label text="Delay" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP"/>
+                    <Slider fx:id="delay" value="15" max="45" blockIncrement="5" minorTickCount="5" majorTickUnit="15"
+                            showTickMarks="true" showTickLabels="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                    <Label text="Period" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.valignment="TOP"/>
+                    <Slider fx:id="period" value="3" min="1" max="25" blockIncrement="1" minorTickCount="5"
+                            showTickMarks="true" showTickLabels="true" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+                </GridPane>
             </center>
         </BorderPane>
     </top>
