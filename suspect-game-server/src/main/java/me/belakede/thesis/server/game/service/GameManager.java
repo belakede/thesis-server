@@ -4,6 +4,7 @@ import me.belakede.thesis.game.equipment.Card;
 import me.belakede.thesis.game.equipment.Suspicion;
 import me.belakede.thesis.server.game.response.Coordinate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -25,7 +26,9 @@ public class GameManager {
     private final SuspectService suspectService;
 
     @Autowired
-    public GameManager(ExitService exitService, JoinService joinService, RollService rollService, MoveService moveService, ShowService showService, NextService nextService, AccuseService accuseService, PlayerService playerService, SuspectService suspectService, HeartbeatService heartbeatService) {
+    public GameManager(ExitService exitService, JoinService joinService, RollService rollService, MoveService moveService, ShowService showService,
+                       NextService nextService, AccuseService accuseService, PlayerService playerService, SuspectService suspectService, HeartbeatService heartbeatService,
+                       @Value("${heartbeat.delay}") Integer heartBeatDelay, @Value("${heartbeat.period}") Integer heartBeatPeriod) {
         this.exitService = exitService;
         this.joinService = joinService;
         this.rollService = rollService;
@@ -35,12 +38,12 @@ public class GameManager {
         this.accuseService = accuseService;
         this.playerService = playerService;
         this.suspectService = suspectService;
-        startHeartBeatService(heartbeatService);
+        startHeartBeatService(heartbeatService, heartBeatDelay, heartBeatPeriod);
     }
 
-    private void startHeartBeatService(HeartbeatService heartbeatService) {
+    private void startHeartBeatService(HeartbeatService heartbeatService, Integer heartBeatDelay, Integer heartBeatPeriod) {
         Timer timer = new Timer();
-        timer.schedule(heartbeatService, 15000, 3000);
+        timer.schedule(heartbeatService, heartBeatDelay, heartBeatPeriod);
     }
 
     public SseEmitter join(Principal principal) {
