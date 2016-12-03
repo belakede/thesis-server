@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.MasterDetailPane?>
+<?import org.controlsfx.glyphfont.Glyph?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="me.belakede.thesis.server.ui.ServerUiController"
+            fx:id="parent" stylesheets="@css/server-ui.css">
+    <top>
+        <BorderPane>
+            <left>
+                <VBox styleClass="sidebar">
+                    <VBox fx:id="imageView" styleClass="logo"/>
+                </VBox>
+            </left>
+            <center>
+
+            </center>
+        </BorderPane>
+    </top>
+    <bottom>
+        <VBox styleClass="log">
+            <MasterDetailPane fx:id="masterDetailPane" detailSide="BOTTOM" showDetailNode="false">
+                <masterNode>
+                    <AnchorPane>
+                        <HBox styleClass="actions" AnchorPane.leftAnchor="0">
+                            <Button text="Show logs" onAction="#toggleLogs">
+                                <graphic>
+                                    <Glyph fontFamily="FontAwesome" icon="PENCIL_SQUARE_ALT"/>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                        <HBox styleClass="actions" AnchorPane.rightAnchor="0">
+                            <Button text="Start" fx:id="startButton" onAction="#startServer">
+                                <graphic>
+                                    <Glyph fontFamily="FontAwesome" icon="PLAY"/>
+                                </graphic>
+                            </Button>
+                            <Button text="Stop" fx:id="stopButton" onAction="#stopServer">
+                                <graphic>
+                                    <Glyph fontFamily="FontAwesome" icon="STOP"/>
+                                </graphic>
+                            </Button>
+                            <Button text="Exit" onAction="#exitUi">
+                                <graphic>
+                                    <Glyph fontFamily="FontAwesome" icon="TIMES"/>
+                                </graphic>
+                            </Button>
+                        </HBox>
+                    </AnchorPane>
+                </masterNode>
+                <detailNode>
+                    <TextArea fx:id="logArea" editable="false"/>
+                </detailNode>
+            </MasterDetailPane>
+        </VBox>
+    </bottom>
+</BorderPane>

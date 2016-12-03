@@ -16,6 +16,7 @@
         <module>suspect-note-server</module>
         <module>suspect-game-server</module>
         <module>suspect-server</module>
+        <module>suspect-server-ui</module>
     </modules>
 
     <properties>

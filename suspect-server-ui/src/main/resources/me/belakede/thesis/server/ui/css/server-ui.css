@@ -1,0 +1,83 @@
+* {
+    -fx-green: #00FF00;
+    -fx-mustard: #f5d04c;
+    -fx-peacock: #326872;
+    -fx-plum: #8e4585;
+    -fx-scarlet: #ff2400;
+    -fx-white: #ffffff;
+}
+
+.sidebar {
+    -fx-min-width: 150;
+    -fx-pref-width: 150;
+    -fx-max-width: 150;
+    -fx-min-height: 150;
+    -fx-pref-height: 150;
+    -fx-max-height: 150;
+    -fx-padding: 12.5;
+    -fx-alignment: center;
+}
+
+.sidebar .logo {
+    -fx-alignment: center;
+    -fx-border-color: #000000;
+    -fx-border-width: 3;
+    -fx-border-style: solid;
+    -fx-border-radius: 75;
+    -fx-background-radius: 75;
+    -fx-background-image: url("../img/logo-circle.png");
+    -fx-background-size: cover;
+    -fx-min-width: 125;
+    -fx-pref-width: 125;
+    -fx-max-width: 125;
+    -fx-min-height: 125;
+    -fx-pref-height: 125;
+    -fx-max-height: 125;
+}
+
+.sidebar .logo.mustard {
+    -fx-effect: dropshadow(three-pass-box, -fx-mustard, 10, 0, 0, 0);
+}
+
+.sidebar .logo.green {
+    -fx-effect: dropshadow(three-pass-box, -fx-green, 10, 0, 0, 0);
+}
+
+.sidebar .logo.peacock {
+    -fx-effect: dropshadow(three-pass-box, -fx-peacock, 10, 0, 0, 0);
+}
+
+.sidebar .logo.plum {
+    -fx-effect: dropshadow(three-pass-box, -fx-plum, 10, 0, 0, 0);
+}
+
+.sidebar .logo.white {
+    -fx-effect: dropshadow(three-pass-box, -fx-white, 10, 0, 0, 0);
+}
+
+.sidebar .logo.scarlet {
+    -fx-effect: dropshadow(three-pass-box, -fx-scarlet, 10, 0, 0, 0);
+}
+
+.actions {
+    -fx-min-height: 50;
+    -fx-pref-height: 50;
+    -fx-max-height: 50;
+    -fx-padding: 9;
+    -fx-spacing: 10;
+    -fx-alignment: center-right;
+}
+
+.log {
+    -fx-min-height: 450;
+    -fx-pref-height: 450;
+    -fx-max-height: 450;
+    -fx-alignment: top-center;
+}
+
+.log TextArea {
+    -fx-min-height: 375;
+    -fx-pref-height: 375;
+    -fx-max-height: 375;
+    -fx-font-family: monospace;
+}
