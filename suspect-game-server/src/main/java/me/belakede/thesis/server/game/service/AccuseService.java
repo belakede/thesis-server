@@ -36,11 +36,16 @@ class AccuseService {
                 finishGame();
                 resetPlayerService();
                 resetNotificationService();
+                changeLastAction(Action.ACCUSE);
             } else {
+                changeLastAction(null);
                 killCurrentPlayer();
             }
-            gameService.changeLastAction(Action.ACCUSE);
         }
+    }
+
+    private void changeLastAction(Action accuse) {
+        gameService.changeLastAction(accuse);
     }
 
     private void killCurrentPlayer() {
