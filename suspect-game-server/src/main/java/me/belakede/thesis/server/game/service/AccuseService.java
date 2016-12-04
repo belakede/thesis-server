@@ -43,7 +43,6 @@ class AccuseService {
             LOGGER.debug("Broadcasting accusation: {}", newValue);
             broadcastAccusation(newValue);
             updateGameLogic(newValue);
-            updatePositions();
             if (isGameEnded()) {
                 LOGGER.debug("Finishing game");
                 broadcastGameIsEnded();
