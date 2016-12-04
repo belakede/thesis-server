@@ -4,13 +4,12 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.control.ToggleSwitch;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 
@@ -34,6 +33,14 @@ public class ServerUiController implements Initializable {
     private ChoiceBox language;
     @FXML
     private TextArea logArea;
+    @FXML
+    private Slider period;
+    @FXML
+    private Slider delay;
+    @FXML
+    private ToggleSwitch loggingLevel;
+    @FXML
+    private TextField serverPort;
     private Stage stage;
 
     @Override
@@ -82,7 +89,7 @@ public class ServerUiController implements Initializable {
     }
 
     public void startServer() {
-        StartServerTask task = new StartServerTask(logArea);
+        StartServerTask task = new StartServerTask(logArea, serverPort.getText(), loggingLevel.isSelected(), delay.getValue(), period.getValue());
         task.setOnFailed(event -> stopServer());
         task.setOnSucceeded(event -> startButton.setDisable(false));
         task.setOnRunning(event -> startButton.setDisable(true));

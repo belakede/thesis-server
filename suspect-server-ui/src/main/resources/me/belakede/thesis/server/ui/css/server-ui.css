@@ -76,9 +76,9 @@
 }
 
 .log TextArea {
-    -fx-min-height: 375;
-    -fx-pref-height: 375;
-    -fx-max-height: 375;
+    -fx-min-height: 365;
+    -fx-pref-height: 365;
+    -fx-max-height: 365;
     -fx-font-family: monospace;
 }
 
