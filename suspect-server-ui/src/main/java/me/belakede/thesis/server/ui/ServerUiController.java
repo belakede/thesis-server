@@ -11,6 +11,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
 
 import java.net.URL;
 import java.util.Collections;
@@ -67,10 +69,10 @@ public class ServerUiController implements Initializable {
     public void toggleLogs() {
         if (masterDetailPane.isShowDetailNode()) {
             stage.setHeight(225);
-            logsButton.setText("Show logs");
+            logsButton.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.ANGLE_DOUBLE_DOWN));
         } else {
             stage.setHeight(600);
-            logsButton.setText("Hide logs");
+            logsButton.setGraphic(new Glyph("FontAwesome", FontAwesome.Glyph.ANGLE_DOUBLE_RIGHT));
         }
         masterDetailPane.setShowDetailNode(!masterDetailPane.isShowDetailNode());
     }

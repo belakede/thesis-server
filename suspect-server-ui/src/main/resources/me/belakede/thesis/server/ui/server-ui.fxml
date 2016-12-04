@@ -45,9 +45,9 @@
                 <masterNode>
                     <AnchorPane>
                         <HBox styleClass="actions" AnchorPane.leftAnchor="0">
-                            <Button fx:id="logsButton" text="Show logs" onAction="#toggleLogs">
+                            <Button fx:id="logsButton" onAction="#toggleLogs" styleClass="logsButton">
                                 <graphic>
-                                    <Glyph fontFamily="FontAwesome" icon="PENCIL_SQUARE_ALT"/>
+                                    <Glyph fontFamily="FontAwesome" icon="ANGLE_DOUBLE_DOWN"/>
                                 </graphic>
                             </Button>
                             <ChoiceBox fx:id="language"/>

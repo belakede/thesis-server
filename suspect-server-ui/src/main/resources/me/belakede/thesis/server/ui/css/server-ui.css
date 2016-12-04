@@ -82,10 +82,16 @@
     -fx-font-family: monospace;
 }
 
-Label {
+GridPane Label {
     -fx-text-fill: #717171;
 }
 
-.title {
+GridPane .title {
     -fx-text-fill: #000000;
+}
+
+.logsButton {
+    -fx-min-width: 40;
+    -fx-pref-width: 40;
+    -fx-max-width: 40;
 }
