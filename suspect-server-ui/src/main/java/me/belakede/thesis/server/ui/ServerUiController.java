@@ -92,7 +92,7 @@ public class ServerUiController implements Initializable {
                 FadeTransition transition = new FadeTransition(Duration.millis(3000), imageView);
                 transition.setFromValue(1.0);
                 transition.setToValue(0.1);
-                transition.setCycleCount(20);
+                transition.setCycleCount(22);
                 transition.setAutoReverse(true);
                 transition.setDuration(Duration.seconds(0.75));
                 imageView.getStyleClass().add("green");
