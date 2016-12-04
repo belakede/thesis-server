@@ -1,7 +1,5 @@
 package me.belakede.thesis.server.game.service;
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import me.belakede.thesis.game.equipment.Suspicion;
 import me.belakede.thesis.server.game.domain.Action;
 import me.belakede.thesis.server.game.response.AccusationNotification;
@@ -16,7 +14,6 @@ class AccuseService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AccuseService.class);
 
-    private final ObjectProperty<Suspicion> suspicion = new SimpleObjectProperty<>();
     private final GameService gameService;
     private final PlayerService playerService;
     private final PositionService positionService;
@@ -28,43 +25,26 @@ class AccuseService {
         this.playerService = playerService;
         this.positionService = positionService;
         this.notificationService = notificationService;
-        hookupChangeListeners();
     }
 
     void accuse(Suspicion suspicion) {
         if (!Action.ACCUSE.equals(gameService.getLastAction())) {
-            setSuspicion(suspicion);
-            gameService.changeLastAction(Action.ACCUSE);
-        }
-    }
-
-    private void hookupChangeListeners() {
-        suspicionProperty().addListener((observable, oldValue, newValue) -> {
-            LOGGER.debug("Broadcasting accusation: {}", newValue);
-            broadcastAccusation(newValue);
-            updateGameLogic(newValue);
+            broadcastAccusation(suspicion);
+            updateGameLogic(suspicion);
             if (isGameEnded()) {
-                LOGGER.debug("Finishing game");
                 broadcastGameIsEnded();
                 finishGame();
                 resetPlayerService();
                 resetNotificationService();
             } else {
-                LOGGER.debug("Killing current player");
                 killCurrentPlayer();
             }
-        });
-    }
-
-    private ObjectProperty<Suspicion> suspicionProperty() {
-        return suspicion;
-    }
-
-    private void setSuspicion(Suspicion suspicion) {
-        this.suspicion.set(suspicion);
+            gameService.changeLastAction(Action.ACCUSE);
+        }
     }
 
     private void killCurrentPlayer() {
+        LOGGER.debug("Killing current player");
         playerService.kill();
     }
 
@@ -77,6 +57,7 @@ class AccuseService {
     }
 
     private void broadcastGameIsEnded() {
+        LOGGER.debug("Finishing game");
         notificationService.broadcast(new GameEndedNotification(playerService.getWinner()));
     }
 
@@ -88,15 +69,12 @@ class AccuseService {
         return gameService.getGameLogic().isGameEnded();
     }
 
-    private void updatePositions() {
-        positionService.update();
-    }
-
     private void updateGameLogic(Suspicion newValue) {
         gameService.getGameLogic().accuse(newValue);
     }
 
     private void broadcastAccusation(Suspicion newValue) {
+        LOGGER.debug("Broadcasting accusation: {}", newValue);
         notificationService.broadcast(new AccusationNotification(newValue));
     }
 
