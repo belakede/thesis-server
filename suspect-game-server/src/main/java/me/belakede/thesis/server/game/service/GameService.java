@@ -106,8 +106,10 @@ public class GameService {
     }
 
     void changeLastAction(Action action) {
-        getGameEntity().setLastAction(action);
-        gameRepository.save(getGameEntity());
+        if (getGameEntity() != null) {
+            getGameEntity().setLastAction(action);
+            gameRepository.save(getGameEntity());
+        }
     }
 
     Action getLastAction() {
