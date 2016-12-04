@@ -20,17 +20,31 @@ import java.util.ResourceBundle;
 public class ServerUiController implements Initializable {
 
     @FXML
+    private Label generalSettingsLabel;
+    @FXML
+    private Label serverPortLabel;
+    @FXML
+    private Label debugModeLabel;
+    @FXML
+    private Label heartbeatSettingsLabel;
+    @FXML
+    private Label delayLabel;
+    @FXML
+    private Label periodLabel;
+    @FXML
     private VBox imageView;
     @FXML
     private Button startButton;
     @FXML
     private Button stopButton;
     @FXML
+    private Button exitButton;
+    @FXML
     private MasterDetailPane masterDetailPane;
     @FXML
     private Button logsButton;
     @FXML
-    private ChoiceBox language;
+    private ChoiceBox<Language> language;
     @FXML
     private TextArea logArea;
     @FXML
@@ -45,6 +59,7 @@ public class ServerUiController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        changeLanguage(resources);
         hookupChangeListeners();
         setupLanguageBox();
     }
@@ -52,7 +67,22 @@ public class ServerUiController implements Initializable {
     private void setupLanguageBox() {
         language.getItems().addAll(Language.values());
         language.setConverter(new LanguageStringConverter());
-        language.getSelectionModel().select(Language.ENGLISH);
+        language.getSelectionModel().select(Language.HUNGARIAN);
+        language.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            changeLanguage(ResourceBundle.getBundle("bundles/server-ui", newValue.getLocale()));
+        });
+    }
+
+    private void changeLanguage(ResourceBundle bundle) {
+        generalSettingsLabel.setText(bundle.getString("General settings"));
+        serverPortLabel.setText(bundle.getString("Server port"));
+        debugModeLabel.setText(bundle.getString("Debug mode"));
+        heartbeatSettingsLabel.setText(bundle.getString("Heartbeat settings"));
+        delayLabel.setText(bundle.getString("Delay"));
+        periodLabel.setText(bundle.getString("Period"));
+        startButton.setText(bundle.getString("Start"));
+        stopButton.setText(bundle.getString("Stop"));
+        exitButton.setText(bundle.getString("Exit"));
     }
 
     private void hookupChangeListeners() {

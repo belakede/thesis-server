@@ -20,19 +20,21 @@
                     <padding>
                         <Insets top="12.5" right="12.5" bottom="12.5" left="12.5"/>
                     </padding>
-                    <Label text="General settings" styleClass="title" GridPane.columnIndex="0" GridPane.rowIndex="0"
-                           GridPane.columnSpan="4"/>
-                    <Label text="Server Port" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                    <Label fx:id="generalSettingsLabel" text="General settings" styleClass="title"
+                           GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="4"/>
+                    <Label fx:id="serverPortLabel" text="Server Port" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                     <TextField fx:id="serverPort" text="8080" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                    <Label text="Debug mode" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                    <Label fx:id="debugModeLabel" text="Debug mode" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
                     <ToggleSwitch fx:id="loggingLevel" GridPane.columnIndex="3" GridPane.rowIndex="1"
                                   GridPane.halignment="LEFT"/>
-                    <Label text="Heartbeat settings" styleClass="title" GridPane.columnIndex="0" GridPane.rowIndex="2"
-                           GridPane.columnSpan="4"/>
-                    <Label text="Delay" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.valignment="TOP"/>
+                    <Label fx:id="heartbeatSettingsLabel" text="Heartbeat settings" styleClass="title"
+                           GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.columnSpan="4"/>
+                    <Label fx:id="delayLabel" text="Delay" GridPane.columnIndex="0" GridPane.rowIndex="3"
+                           GridPane.valignment="TOP"/>
                     <Slider fx:id="delay" value="15" max="45" blockIncrement="5" minorTickCount="5" majorTickUnit="15"
                             showTickMarks="true" showTickLabels="true" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-                    <Label text="Period" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.valignment="TOP"/>
+                    <Label fx:id="periodLabel" text="Period" GridPane.columnIndex="2" GridPane.rowIndex="3"
+                           GridPane.valignment="TOP"/>
                     <Slider fx:id="period" value="3" min="1" max="25" blockIncrement="1" minorTickCount="5"
                             showTickMarks="true" showTickLabels="true" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
                 </GridPane>
@@ -63,7 +65,7 @@
                                     <Glyph fontFamily="FontAwesome" icon="STOP"/>
                                 </graphic>
                             </Button>
-                            <Button text="Exit" onAction="#exitUi">
+                            <Button text="Exit" fx:id="exitButton" onAction="#exitUi">
                                 <graphic>
                                     <Glyph fontFamily="FontAwesome" icon="TIMES"/>
                                 </graphic>
