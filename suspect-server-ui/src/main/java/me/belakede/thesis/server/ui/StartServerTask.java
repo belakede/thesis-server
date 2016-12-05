@@ -6,6 +6,7 @@ import javafx.scene.control.TextArea;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.math.BigDecimal;
 
 public class StartServerTask extends Task<Void> {
 
@@ -19,8 +20,8 @@ public class StartServerTask extends Task<Void> {
         this.textArea = textArea;
         this.port = (port.isEmpty()) ? "" : ("--server.port=" + port);
         this.debug = debug ? "--logging.level.me.belakede.thesis=DEBUG" : "";
-        this.delay = "--heartbeat.delay=" + (delay * 1000);
-        this.period = "--heartbeat.period=" + (period * 1000);
+        this.delay = "--heartbeat.delay=" + BigDecimal.valueOf(delay).multiply(BigDecimal.valueOf(1000)).intValue();
+        this.period = "--heartbeat.period=" + BigDecimal.valueOf(period).multiply(BigDecimal.valueOf(1000)).intValue();
     }
 
     @Override
