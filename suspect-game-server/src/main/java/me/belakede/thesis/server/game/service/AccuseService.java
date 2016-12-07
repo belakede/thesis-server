@@ -16,14 +16,12 @@ class AccuseService {
 
     private final GameService gameService;
     private final PlayerService playerService;
-    private final PositionService positionService;
     private final NotificationService notificationService;
 
     @Autowired
-    public AccuseService(GameService gameService, PlayerService playerService, PositionService positionService, NotificationService notificationService) {
+    public AccuseService(GameService gameService, PlayerService playerService, NotificationService notificationService) {
         this.gameService = gameService;
         this.playerService = playerService;
-        this.positionService = positionService;
         this.notificationService = notificationService;
     }
 
