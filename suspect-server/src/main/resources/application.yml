@@ -1,6 +1,8 @@
 spring:
-    main:
-        banner-mode: "off"
+  main:
+    banner-mode: "off"
+  datasource:
+    url: jdbc:hsqldb:file:data/store;shutdown=true
 logging:
   level:
     root: WARN
