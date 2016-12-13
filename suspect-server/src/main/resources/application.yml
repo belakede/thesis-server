@@ -6,3 +6,8 @@ logging:
     root: WARN
     me.belakede.thesis: INFO
     org.springframework: WARN
+server:
+  port: 8080
+heartbeat:
+  delay: 15000
+  period: 3000
