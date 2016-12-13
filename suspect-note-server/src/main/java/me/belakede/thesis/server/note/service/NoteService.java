@@ -2,7 +2,6 @@ package me.belakede.thesis.server.note.service;
 
 import me.belakede.thesis.server.note.domain.Author;
 import me.belakede.thesis.server.note.domain.Note;
-import me.belakede.thesis.server.note.domain.Suggestion;
 import me.belakede.thesis.server.note.repository.NoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

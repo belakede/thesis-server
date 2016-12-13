@@ -17,9 +17,6 @@ public class Author {
     @Column(nullable = false, updatable = false)
     private String room;
 
-    @OneToOne(mappedBy = "author")
-    private Suggestion suggestion;
-
     @OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
     private List<Note> notes;
 
@@ -54,14 +51,6 @@ public class Author {
 
     public void setRoom(String room) {
         this.room = room;
-    }
-
-    public Suggestion getSuggestion() {
-        return suggestion;
-    }
-
-    public void setSuggestion(Suggestion suggestion) {
-        this.suggestion = suggestion;
     }
 
     public List<Note> getNotes() {
